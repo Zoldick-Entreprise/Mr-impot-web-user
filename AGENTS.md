@@ -2,125 +2,31 @@
 
 ## Dernière mise à jour : 01/04/2026
 
-## État du projet
+## Corrections effectuées
 
-- **Phase actuelle :** Phase 2 - Layout & Navigation
-- **Statut :** En cours
+### Design simplifié - Sans dégradés
 
-## Travail effectué
+- ✅ HeroSection: fond blanc, bordures grises, ombres au hover uniquement
+- ✅ CTASection: fond gris clair, bordure supérieure
+- ✅ FeaturesSection: fond blanc, bordures grises
+- ✅ CategoriesSection: fond gris clair, bordures grises
+- ✅ TestimonialsSection: fond blanc, bordures grises
+- ✅ LandingHeader: fond blanc, bordure inférieure
 
-### Phase 1 : Configuration & Setup - ✅ COMPLÈTE
+### Éléments de design cohérents
 
-### Phase 2 : Layout & Navigation - EN COURS
-
-#### Étape 2.1 : Layout racine
-
-- ✅ app/layout.tsx (métadonnées SEO)
-- ✅ app/globals.css (styles globaux)
-
-#### Étape 2.2 : Hook useSidebar
-
-- ✅ hooks/useSidebar.ts (gestion état sidebar avec zustand)
-
-#### Étape 2.3 : Composant Sidebar
-
-- ✅ components/layout/Sidebar.tsx
-  - Navigation principale (6 items)
-  - Catégories (4 items)
-  - Déconnexion
-  - Version
-  - Responsive (mobile/desktop)
-
-#### Étape 2.4 : Composant Header
-
-- ✅ components/layout/Header.tsx
-  - Menu hamburger mobile
-  - Barre de recherche
-  - Notifications
-  - Menu utilisateur avec dropdown
-
-#### Étape 2.5 : Layout Dashboard
-
-- ✅ app/(dashboard)/layout.tsx (layout avec sidebar + header)
-
-#### Étape 2.6 : Page Dashboard
-
-- ✅ app/(dashboard)/page.tsx
-  - Statistiques (4 cards)
-  - Documents récents
-  - Activité récente
-  - Accès rapide catégories
-
-## Structure actuelle du projet
-
-```
-webapp/
-├── app/
-│   ├── (dashboard)/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── layout.tsx
-│   ├── globals.css
-│   └── page.tsx (Landing - à créer)
-├── components/
-│   ├── common/
-│   │   ├── Button.tsx
-│   │   ├── Input.tsx
-│   │   ├── Card.tsx
-│   │   ├── LoadingSpinner.tsx
-│   │   ├── Modal.tsx
-│   │   ├── Avatar.tsx
-│   │   ├── Badge.tsx
-│   │   ├── Dropdown.tsx
-│   │   └── Tabs.tsx
-│   └── layout/
-│       ├── Sidebar.tsx
-│       └── Header.tsx
-├── hooks/
-│   ├── useDebounce.ts
-│   ├── useLocalStorage.ts
-│   ├── useMediaQuery.ts
-│   ├── useClickOutside.ts
-│   └── useSidebar.ts
-├── data/
-│   └── mockData.ts
-├── services/
-│   └── api.ts
-├── types/
-│   ├── index.ts
-│   ├── user.ts
-│   ├── document.ts
-│   └── video.ts
-└── utils/
-    ├── constants.ts
-    ├── formatters.ts
-    ├── validators.ts
-    └── dateUtils.ts
-```
+- Bordures: `border-gray-200`
+- Ombres: `hover:shadow-md` uniquement au survol
+- Fonds: blanc ou `bg-gray-50`
+- Espacement: `py-20` pour les sections
+- Arrondis: `rounded-lg` pour les cartes
+- Couleurs: `#3EA7DE` (primary), `#FF7F36` (accent)
 
 ## Prochaines étapes
 
-### Phase 2 (suite)
+### Phase 3 : Authentification
 
-- Étape 2.8 : Landing Page (app/page.tsx)
-- Étape 2.9 : Pages d'authentification (login, register)
-
-### Phase 3
-
-- Page Documents
-- Page Vidéos
-- Page Recherche
-
-## Composants créés aujourd'hui
-
-- Sidebar (avec navigation et catégories)
-- Header (avec recherche et menu utilisateur)
-- Layout Dashboard
-- Page Dashboard avec statistiques et activités
-
-## Notes techniques
-
-- Installation de zustand pour la gestion d'état de la sidebar
-- Utilisation de useMediaQuery pour la détection mobile
-- Dropdown personnalisé pour le menu utilisateur
-- Icônes Lucide React utilisées partout
+- Page Login
+- Page Register
+- Page Forgot Password
+- Page Reset Password
