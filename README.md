@@ -1,37 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mr Impôt
 
-## Getting Started
+Plateforme de ressources juridiques et fiscales.
 
-First, run the development server:
+## À propos
+
+Mr Impôt est une application web qui centralise l'accès aux documents juridiques, vidéos éducatives et ressources fiscales. Une solution moderne et intuitive pour les professionnels et particuliers.
+
+## Fonctionnalités
+
+- 📄 **Bibliothèque de documents** : Accédez à des milliers de documents juridiques classés par catégorie
+- 🎥 **Vidéos éducatives** : Apprenez à votre rythme avec des contenus vidéo
+- 🔍 **Recherche avancée** : Trouvez rapidement ce que vous cherchez
+- 👤 **Espace personnel** : Gérez vos favoris et votre historique
+- 📱 **Responsive** : Utilisable sur tous vos appareils
+
+## Technologies
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Lucide React
+
+## Démarrage rapide
 
 ```bash
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrez [http://localhost:3000](http://localhost:3000) pour voir l'application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure du projet
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+webapp/
+├── app/           # Pages et layouts
+├── components/    # Composants réutilisables
+├── hooks/         # Hooks personnalisés
+├── types/         # Définitions TypeScript
+├── utils/         # Fonctions utilitaires
+└── public/        # Assets statiques
+```
 
-## Learn More
+## Équipe
 
-To learn more about Next.js, take a look at the following resources:
+Projet développé dans le cadre de Mr Impôt.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Licence
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Mr-impot-web-user
+Tous droits réservés.
