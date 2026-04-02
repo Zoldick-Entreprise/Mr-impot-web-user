@@ -41,10 +41,6 @@ export default function CTASection() {
           </Link>
         </div>
 
-        <p className="mt-6 text-sm text-gray-500">
-          Gratuit pendant 14 jours, sans engagement
-        </p>
-
         {/* Ligne décorative en bas (optionnelle) */}
         <div className="mt-12 h-1 w-20 bg-gradient-to-r from-[#3EA7DE] to-[#FF7F36] rounded-full mx-auto" />
       </div>

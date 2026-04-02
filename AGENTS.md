@@ -1,32 +1,35 @@
 # AGENTS.md - Mr Impôt Project
 
-## Dernière mise à jour : 01/04/2026
+## Dernière mise à jour : 02/04/2026
 
-## Corrections effectuées
+## Travail effectué
 
-### Design simplifié - Sans dégradés
+### Phase 3 : Authentification - EN COURS
 
-- ✅ HeroSection: fond blanc, bordures grises, ombres au hover uniquement
-- ✅ CTASection: fond gris clair, bordure supérieure
-- ✅ FeaturesSection: fond blanc, bordures grises
-- ✅ CategoriesSection: fond gris clair, bordures grises
-- ✅ TestimonialsSection: fond blanc, bordures grises
-- ✅ LandingHeader: fond blanc, bordure inférieure
+#### Page Login
 
-### Éléments de design cohérents
+- ✅ app/(auth)/login/page.tsx
+  - Ajout bouton "Continuer avec Google"
+  - SVG Google intégré
+  - États de chargement
+  - Design responsive
 
-- Bordures: `border-gray-200`
-- Ombres: `hover:shadow-md` uniquement au survol
-- Fonds: blanc ou `bg-gray-50`
-- Espacement: `py-20` pour les sections
-- Arrondis: `rounded-lg` pour les cartes
-- Couleurs: `#3EA7DE` (primary), `#FF7F36` (accent)
+#### Page Register
+
+- ✅ app/(auth)/register/page.tsx
+  - Ajout bouton "S'inscrire avec Google"
+  - SVG Google intégré
+  - États de chargement
+  - Formulaire en 3 étapes
+
+## Améliorations
+
+- Boutons Google avec hover effect
+- Désactivation pendant chargement
+- Séparateur "ou" élégant
+- Design cohérent entre les deux pages
 
 ## Prochaines étapes
 
-### Phase 3 : Authentification
-
-- Page Login
-- Page Register
-- Page Forgot Password
-- Page Reset Password
+- Page Forgot Password (mot de passe oublié)
+- Page Reset Password (réinitialisation)

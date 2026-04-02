@@ -5,7 +5,6 @@ import {
   RiMailLine,
   RiPhoneLine,
   RiMapPinLine,
-  RiGlobalLine,
   RiTwitterXLine,
   RiLinkedinBoxLine,
   RiFacebookFill,
@@ -77,38 +76,31 @@ export default function LandingFooter() {
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 transform"
+                className="text-gray-400 hover:text-[#3EA7DE] transition-all duration-200 hover:scale-110 transform"
                 aria-label="Twitter"
               >
                 <RiTwitterXLine className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 transform"
+                className="text-gray-400 hover:text-[#3EA7DE] transition-all duration-200 hover:scale-110 transform"
                 aria-label="LinkedIn"
               >
                 <RiLinkedinBoxLine className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 transform"
+                className="text-gray-400 hover:text-[#3EA7DE] transition-all duration-200 hover:scale-110 transform"
                 aria-label="Facebook"
               >
                 <RiFacebookFill className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 transform"
+                className="text-gray-400 hover:text-[#3EA7DE] transition-all duration-200 hover:scale-110 transform"
                 aria-label="Instagram"
               >
                 <RiInstagramLine className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 transform"
-                aria-label="Global"
-              >
-                <RiGlobalLine className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -158,12 +150,12 @@ export default function LandingFooter() {
                   href="tel:+33123456789"
                   className="hover:text-white transition-colors"
                 >
-                  +33 1 23 45 67 89
+                  +237 6 99 99 99 99
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-gray-400">
                 <RiMapPinLine className="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5" />
-                <span>123 Avenue de la République, 75011 Paris</span>
+                <span>123 Immeuble Air France, Bonandjo Douala</span>
               </li>
             </ul>
           </div>
