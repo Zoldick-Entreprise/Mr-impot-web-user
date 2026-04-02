@@ -43,7 +43,7 @@ export default function Login() {
             }}
           />
           <span className="text-2xl font-bold text-[#3DA7E3] tracking-tight">
-            Mr Impôt
+            M. Impôt
           </span>
         </Link>
 
