@@ -43,9 +43,9 @@ export default function Avatar({
   if (fallback) {
     return (
       <div
-        className={`rounded-full bg-primary/10 flex items-center justify-center ${sizes[size]}`}
+        className={`rounded-full bg-gray-100 flex items-center justify-center ${sizes[size]}`}
       >
-        <span className="text-primary font-medium">
+        <span className="text-[#F49600] font-medium">
           {getInitials(fallback)}
         </span>
       </div>
