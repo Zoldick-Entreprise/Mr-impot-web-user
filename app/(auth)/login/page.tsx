@@ -35,7 +35,7 @@ export default function Login() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 group">
           <img
-            src="/logo.jpg"
+            src="/logo.png"
             alt="Mr Impôt"
             className="h-12 w-auto"
             onError={(e) => {
@@ -102,9 +102,9 @@ export default function Login() {
               className="flex items-center justify-center space-x-3"
             >
               <img
-                src="/logo.jpg"
+                src="/logo.png"
                 alt="Mr Impôt"
-                className="h-10 w-auto"
+                className="h-15 w-auto"
                 onError={(e) => {
                   e.currentTarget.src =
                     "https://via.placeholder.com/40x40?text=MI";

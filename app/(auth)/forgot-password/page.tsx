@@ -29,7 +29,7 @@ export default function ForgotPassword() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 group">
           <img
-            src="/logo.jpg"
+            src="/logo.png"
             alt="Mr Impôt"
             className="h-12 w-auto"
             onError={(e) => {
@@ -104,7 +104,7 @@ export default function ForgotPassword() {
               className="flex items-center justify-center space-x-3"
             >
               <img
-                src="/logo.jpg"
+                src="/logo.png"
                 alt="Mr Impôt"
                 className="h-10 w-auto"
                 onError={(e) => {

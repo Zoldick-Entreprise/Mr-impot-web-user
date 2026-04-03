@@ -94,7 +94,7 @@ export default function Sidebar() {
           <div className="flex items-center justify-center h-16 border-b border-gray-200">
             <div className="flex items-center space-x-2">
               <img
-                src="/logo2.png"
+                src="/logo.png"
                 alt="Mr Impôt"
                 className="h-8 w-auto"
                 onError={(e) => {

@@ -84,7 +84,7 @@ export default function Header() {
               </div>
             </DropdownItem>
             <div className="border-t border-gray-100 my-1"></div>
-            <DropdownItem onClick={() => console.log("Logout")}>
+            <DropdownItem onClick={() => console.log("ut")}>
               <div className="flex items-center gap-2 text-red-600">
                 <LogOut className="w-4 h-4" />
                 <span>Déconnexion</span>

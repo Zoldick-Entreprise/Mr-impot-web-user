@@ -17,7 +17,7 @@ const footerSections = [
     links: [
       { name: "Fonctionnalités", href: "/features" },
       { name: "Catégories", href: "/categories" },
-      { name: "Tarifs", href: "/pricing" },
+      // { name: "Tarifs", href: "/pricing" },
       { name: "FAQ", href: "/faq" },
     ],
   },
@@ -57,7 +57,7 @@ export default function LandingFooter() {
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img
-                src="/logo2.png"
+                src="/logo.png"
                 alt="Mr Impôt"
                 className="h-20 w-auto"
                 onError={(e) => {
