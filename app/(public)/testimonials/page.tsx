@@ -1,10 +1,8 @@
 "use client";
 
-import { Link, Star } from "lucide-react";
+import { ArrowRight, Link, Star } from "lucide-react";
 import LandingHeader from "@/components/landing/LandingHeader";
 import LandingFooter from "@/components/landing/LandingFooter";
-import { ArrowRight } from "lucide-react";
-
 
 const testimonialsList = [
   {
@@ -90,7 +88,7 @@ const testimonialsList = [
   }
 ];
 
-export default function Testimonials() {
+export default function TestimonialsPage() {
   return (
     <>
       <LandingHeader />
@@ -187,7 +185,7 @@ export default function Testimonials() {
             >
               Créer un compte gratuit
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </ Link>
           </div>
         </section>
       </main>

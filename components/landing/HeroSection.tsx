@@ -39,7 +39,7 @@ export default function HeroSection() {
                   Commencer gratuitement
                 </Button>
               </Link>
-              <Link href="#features">
+              <Link href="/features">
                 <Button
                   variant="outline"
                   size="lg"
