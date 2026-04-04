@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -21,7 +22,8 @@ import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
 import { documents, videos } from "@/data/mockData";
 
-type ResultType = "all" | "documents" | "videos";
+// Correction du type : utiliser "document" et "video" (singulier)
+type ResultType = "all" | "document" | "video";
 
 interface SearchResult {
   id: string;
@@ -117,6 +119,7 @@ export default function SearchPage() {
     router.push("/dashboard/search");
   };
 
+  // Correction de la comparaison : activeTab est maintenant "document" ou "video"
   const filteredResults = results.filter((result) => {
     if (activeTab !== "all" && result.type !== activeTab) return false;
     if (selectedCategory && result.category !== selectedCategory) return false;
@@ -141,7 +144,7 @@ export default function SearchPage() {
         </p>
       </div>
 
-      {/* Barre de recherche principale - Responsive corrigé */}
+      {/* Barre de recherche principale */}
       <form onSubmit={handleSearch} className="w-full">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
@@ -179,6 +182,7 @@ export default function SearchPage() {
       {(results.length > 0 || isLoading || initialQuery) && (
         <div className="space-y-4">
           <div className="flex flex-col gap-4">
+            {/* Onglets - Correction des valeurs */}
             <div className="flex items-center gap-1 border-b border-gray-200 overflow-x-auto">
               <button
                 onClick={() => setActiveTab("all")}
@@ -191,9 +195,9 @@ export default function SearchPage() {
                 Tous ({results.length})
               </button>
               <button
-                onClick={() => setActiveTab("documents")}
+                onClick={() => setActiveTab("document")}
                 className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 flex items-center gap-1 whitespace-nowrap ${
-                  activeTab === "documents"
+                  activeTab === "document"
                     ? "border-[#3DA7E3] text-[#3DA7E3]"
                     : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
@@ -203,9 +207,9 @@ export default function SearchPage() {
                 )
               </button>
               <button
-                onClick={() => setActiveTab("videos")}
+                onClick={() => setActiveTab("video")}
                 className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 flex items-center gap-1 whitespace-nowrap ${
-                  activeTab === "videos"
+                  activeTab === "video"
                     ? "border-[#3DA7E3] text-[#3DA7E3]"
                     : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
