@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, Shield, CheckCircle } from "lucide-react";
 import Button from "@/components/common/Button";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,20 +13,27 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     // logique de connexion
     console.log({ email, password, rememberMe });
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => {
+      setIsLoading(false);
+      // Redirection vers dashboard après connexion
+      router.push("/dashboard");
+    }, 1000);
   };
 
   const handleGoogleLogin = () => {
     setIsLoading(true);
-    // Logique connexion Google
     console.log("Login with Google");
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push("/dashboard");
+    }, 1000);
   };
 
   return (

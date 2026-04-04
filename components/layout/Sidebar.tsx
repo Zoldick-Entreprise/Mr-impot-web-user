@@ -110,15 +110,17 @@ export default function Sidebar() {
 
           {/* Footer */}
           <div className="p-4 border-t border-gray-200">
-            <button
-              onClick={() => {
-                console.log("Logout");
-              }}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-red-600 transition-colors"
-            >
-              <LogOut className="w-4 h-4 mr-3" />
-              Déconnexion
-            </button>
+            <Link href="/">
+              <button
+                onClick={() => {
+                  console.log("Logout");
+                }}
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-red-600 transition-colors"
+              >
+                <LogOut className="w-4 h-4 mr-3" />
+                Déconnexion
+              </button>
+            </Link>
             <div className="mt-4 text-xs text-center text-gray-400">
               Version 1.0.0
             </div>

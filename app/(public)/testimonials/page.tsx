@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { ArrowRight, Link, Star } from "lucide-react";
@@ -85,7 +87,7 @@ const testimonialsList = [
     rating: 4,
     avatar:
       "https://ui-avatars.com/api/?name=Nadia+Merabet&background=3EA7DE&color=fff",
-  }
+  },
 ];
 
 export default function TestimonialsPage() {
@@ -106,7 +108,7 @@ export default function TestimonialsPage() {
               </h1>
               <p className="mt-4 text-lg text-gray-600">
                 Des milliers de professionnels nous font confiance au quotidien.
-                Découvrez leurs retours d'expérience.
+                Découvrez leurs retours d&apos;expérience.
               </p>
             </div>
           </div>
@@ -159,7 +161,7 @@ export default function TestimonialsPage() {
 
                   {/* Citation */}
                   <p className="text-gray-600 leading-relaxed relative z-10">
-                    "{testimonial.content}"
+                    &quot;{testimonial.content}&quot;
                   </p>
 
                   {/* Ligne décorative au survol */}
@@ -179,13 +181,6 @@ export default function TestimonialsPage() {
             <p className="text-gray-600 mb-6">
               Déjà plus de 50 000 professionnels utilisent Mr Impôt.
             </p>
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#3EA7DE] text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-            >
-              Créer un compte gratuit
-              <ArrowRight className="w-4 h-4" />
-            </ Link>
           </div>
         </section>
       </main>

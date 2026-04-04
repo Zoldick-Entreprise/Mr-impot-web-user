@@ -18,7 +18,8 @@ export default function SupportPage() {
                 Support
               </span>
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
-                Comment pouvons-nous <span className="text-[#FF7F36]">vous aider ?</span>
+                Comment pouvons-nous{" "}
+                <span className="text-[#FF7F36]">vous aider ?</span>
               </h1>
               <p className="mt-4 text-lg text-gray-600">
                 Notre équipe est à votre écoute 24h/24 et 7j/7.
@@ -35,7 +36,9 @@ export default function SupportPage() {
                 <div className="w-14 h-14 rounded-full bg-[#3EA7DE]/10 flex items-center justify-center mx-auto mb-4">
                   <Mail className="w-7 h-7 text-[#3EA7DE]" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Email</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Email
+                </h3>
                 <p className="text-gray-500 text-sm mb-4">
                   Une réponse sous 24h ouvrées
                 </p>
@@ -51,7 +54,9 @@ export default function SupportPage() {
                 <div className="w-14 h-14 rounded-full bg-[#FF7F36]/10 flex items-center justify-center mx-auto mb-4">
                   <Phone className="w-7 h-7 text-[#FF7F36]" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Téléphone</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Téléphone
+                </h3>
                 <p className="text-gray-500 text-sm mb-4">
                   Du lundi au vendredi, 9h‑18h
                 </p>
@@ -59,7 +64,7 @@ export default function SupportPage() {
                   href="tel:+33123456789"
                   className="text-[#FF7F36] font-medium hover:underline"
                 >
-                  +33 1 23 45 67 89
+                  +237 6 99 99 99 99
                 </a>
               </div>
 
@@ -67,7 +72,9 @@ export default function SupportPage() {
                 <div className="w-14 h-14 rounded-full bg-[#3EA7DE]/10 flex items-center justify-center mx-auto mb-4">
                   <MessageCircle className="w-7 h-7 text-[#3EA7DE]" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Chat en ligne</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Chat en ligne
+                </h3>
                 <p className="text-gray-500 text-sm mb-4">
                   Disponible immédiatement
                 </p>
@@ -81,10 +88,13 @@ export default function SupportPage() {
             <div className="mt-16 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
                 <Headphones className="w-6 h-6 text-[#3EA7DE]" />
-                <h3 className="text-xl font-semibold text-gray-900">Centre d'aide</h3>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Centre d&apos;aide
+                </h3>
               </div>
               <p className="text-gray-600 mb-6">
-                Consultez notre FAQ pour des réponses immédiates aux questions les plus fréquentes.
+                Consultez notre FAQ pour des réponses immédiates aux questions
+                les plus fréquentes.
               </p>
               <Link
                 href="/faq"

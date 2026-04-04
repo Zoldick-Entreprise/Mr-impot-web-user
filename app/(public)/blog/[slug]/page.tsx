@@ -57,7 +57,7 @@ export default function BlogPostPage() {
 
         {/* Contenu de l'article */}
         <section className="py-12">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-black">
             <article className="prose prose-lg prose-gray max-w-none">
               {/* Le contenu HTML est injecté via dangerouslySetInnerHTML */}
               <div dangerouslySetInnerHTML={{ __html: article.content }} />
@@ -66,7 +66,8 @@ export default function BlogPostPage() {
             {/* Signature / appel à l'action */}
             <div className="mt-12 pt-8 border-t border-gray-200 text-center">
               <p className="text-gray-500 text-sm">
-                Cet article vous a été utile ? Partagez-le ou consultez nos autres ressources.
+                Cet article vous a été utile ? Partagez-le ou consultez nos
+                autres ressources.
               </p>
               <Link
                 href="/register"

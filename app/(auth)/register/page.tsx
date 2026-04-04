@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Button from "@/components/common/Button";
+import { useRouter } from "next/navigation";
 
 const steps = ["Identité", "Accès", "Confirmation"];
 
@@ -31,6 +32,7 @@ export default function Register() {
     confirm: "",
     acceptTerms: false,
   });
+  const router = useRouter();
 
   const set = (key: string, val: string | boolean) =>
     setForm((prev) => ({ ...prev, [key]: val }));
@@ -39,13 +41,19 @@ export default function Register() {
     e.preventDefault();
     setIsLoading(true);
     console.log("Inscription:", form);
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push("/dashboard");
+    }, 1000);
   };
 
   const handleGoogleRegister = () => {
     setIsLoading(true);
     console.log("Register with Google");
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push("/dashboard");
+    }, 1000);
   };
 
   const isStepValid = () => {
@@ -432,6 +440,7 @@ export default function Register() {
                       onChange={(e) => set("acceptTerms", e.target.checked)}
                       className="w-4 h-4 mt-0.5 rounded border-gray-300 text-[#3DA7E3] focus:ring-[#3DA7E3]"
                     />
+
                     <label
                       htmlFor="terms"
                       className="text-xs text-gray-500 leading-relaxed cursor-pointer"
