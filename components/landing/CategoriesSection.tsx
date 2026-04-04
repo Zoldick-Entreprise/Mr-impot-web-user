@@ -124,7 +124,7 @@ export default function CategoriesSection() {
 
         {/* Bouton CTA amélioré */}
         <div className="text-center mt-12">
-          <Link href="/register">
+          <Link href="/categories">
             <Button
                               variant="primary"
                               size="lg"

@@ -80,7 +80,7 @@ export default function Register() {
         <Link href="/" className="flex items-center space-x-3 group">
           <img
             src="/logo.png"
-            alt="Mr Impôt"
+            alt="M Impôt"
             className="h-12 w-auto"
             onError={(e) => {
               e.currentTarget.src = "https://via.placeholder.com/48x48?text=MI";
@@ -147,14 +147,14 @@ export default function Register() {
             >
               <img
                 src="/logo.png"
-                alt="Mr Impôt"
+                alt="M Impôt"
                 className="h-15 w-auto"
                 onError={(e) => {
                   e.currentTarget.src =
                     "https://via.placeholder.com/40x40?text=MI";
                 }}
               />
-              <span className="text-xl font-bold text-[#3DA7E3]">Mr Impôt</span>
+              <span className="text-xl font-bold text-[#3DA7E3]">M Impôt</span>
             </Link>
           </div>
 

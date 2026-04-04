@@ -60,20 +60,21 @@ export default function Sidebar() {
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 border-b border-gray-200">
-            <div className="flex items-center space-x-2">
-              <img
-                src="/logo.png"
-                alt="Mr Impôt"
-                className="h-8 w-auto"
-                onError={(e) => {
-                  e.currentTarget.src =
-                    "https://via.placeholder.com/32x32?text=MI";
-                }}
-              />
-              <span className="text-xl font-bold text-[#3DA7E3]">Mr Impôt</span>
-            </div>
-          </div>
+      
+           <Link href="/" className="flex items-center justify-center h-16 border-b border-gray-200 space-x-3">
+            <img
+              src="/logo.png"
+              alt="M Impôt"
+              className="h-10 w-auto "
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://via.placeholder.com/40x40?text=MI";
+              }}
+            />
+            <span className="text-xl font-bold text-[#3EA7DE] tracking-tight">
+              M. Impôt
+            </span>
+          </Link>
 
           {/* Navigation principale */}
           <nav className="flex-1 px-4 py-6 overflow-y-auto">

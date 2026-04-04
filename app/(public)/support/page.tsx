@@ -43,10 +43,10 @@ export default function SupportPage() {
                   Une réponse sous 24h ouvrées
                 </p>
                 <a
-                  href="mailto:support@mrimpôt.com"
+                  href="mailto:support@mimpôt.com"
                   className="text-[#3EA7DE] font-medium hover:underline"
                 >
-                  support@mrimpôt.com
+                  support@mimpôt.com
                 </a>
               </div>
 

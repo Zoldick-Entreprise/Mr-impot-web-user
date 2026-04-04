@@ -190,13 +190,13 @@ function VideosContent() {
                     <img
                       src={
                         video.thumbnail ||
-                        "https://via.placeholder.com/640x360?text=Mr+Impôt"
+                        "https://via.placeholder.com/640x360?text=M+Impôt"
                       }
                       alt={video.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         e.currentTarget.src =
-                          "https://via.placeholder.com/640x360?text=Mr+Impôt";
+                          "https://via.placeholder.com/640x360?text=M+Impôt";
                       }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">

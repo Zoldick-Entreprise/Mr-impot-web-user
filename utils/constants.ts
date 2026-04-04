@@ -1,4 +1,4 @@
-export const APP_NAME = "Mr Impôt";
+export const APP_NAME = "M Impôt";
 export const APP_DESCRIPTION =
   "Plateforme de documents et ressources juridiques";
 export const API_BASE_URL =

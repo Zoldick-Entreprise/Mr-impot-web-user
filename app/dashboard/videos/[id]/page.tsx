@@ -76,7 +76,7 @@ export default function VideoDetailPage() {
             duration: found.duration,
             category: found.category,
             views: found.views + 1,
-            uploadedBy: "Expert Mr Impôt",
+            uploadedBy: "Expert M Impôt",
             uploadedAt: found.uploadedAt,
             isFavorite: false,
           });

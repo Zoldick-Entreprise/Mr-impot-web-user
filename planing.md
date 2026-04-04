@@ -1,4 +1,4 @@
-## 🗺️ **PLAN D'ATTAQUE - MR IMPÔT**
+## 🗺️ **PLAN D'ATTAQUE - M IMPÔT**
 
 ### **PHASE 1 : Configuration & Setup (Jour 1)**
 

@@ -1,4 +1,4 @@
-# AGENTS.md - Mr Impôt Project
+# AGENTS.md - M Impôt Project
 
 ## Dernière mise à jour : 04/04/2026
 

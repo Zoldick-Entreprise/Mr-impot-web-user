@@ -18,7 +18,7 @@ const endpoints = [
       { name: "search", type: "string", description: "Recherche par mots-clés" }
     ],
     auth: true,
-    example: `curl -X GET "https://api.mrimpôt.com/v1/documents?category=fiscal&limit=10" \\
+    example: `curl -X GET "https://api.mimpôt.com/v1/documents?category=fiscal&limit=10" \\
   -H "Authorization: Bearer YOUR_API_KEY"`
   },
   {
@@ -29,7 +29,7 @@ const endpoints = [
       { name: "id", type: "string", description: "Identifiant unique du document" }
     ],
     auth: true,
-    example: `curl -X GET "https://api.mrimpôt.com/v1/documents/doc_123456" \\
+    example: `curl -X GET "https://api.mimpôt.com/v1/documents/doc_123456" \\
   -H "Authorization: Bearer YOUR_API_KEY"`
   },
   {
@@ -38,7 +38,7 @@ const endpoints = [
     description: "Liste toutes les catégories avec leurs métadonnées",
     params: [],
     auth: false,
-    example: `curl -X GET "https://api.mrimpôt.com/v1/categories"`
+    example: `curl -X GET "https://api.mimpôt.com/v1/categories"`
   },
   {
     method: "GET",
@@ -50,7 +50,7 @@ const endpoints = [
       { name: "limit", type: "integer", description: "Nombre de résultats", default: "20" }
     ],
     auth: true,
-    example: `curl -X GET "https://api.mrimpôt.com/v1/search?q=licenciement+économique&type=document" \\
+    example: `curl -X GET "https://api.mimpôt.com/v1/search?q=licenciement+économique&type=document" \\
   -H "Authorization: Bearer YOUR_API_KEY"`
   },
   {
@@ -61,7 +61,7 @@ const endpoints = [
       { name: "document_id", type: "string", required: true, description: "ID du document" }
     ],
     auth: true,
-    example: `curl -X POST "https://api.mrimpôt.com/v1/users/favorites" \\
+    example: `curl -X POST "https://api.mimpôt.com/v1/users/favorites" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"document_id": "doc_123456"}'`
@@ -69,9 +69,9 @@ const endpoints = [
 ];
 
 const codeExamples = {
-  javascript: `import { MrImpôtAPI } from 'mrimpôt-sdk';
+  javascript: `import { MImpôtAPI } from 'mimpôt-sdk';
 
-const api = new MrImpôtAPI('YOUR_API_KEY');
+const api = new MImpôtAPI('YOUR_API_KEY');
 
 // Récupérer les documents fiscaux
 const documents = await api.documents.list({
@@ -80,7 +80,7 @@ const documents = await api.documents.list({
 });
 
 console.log(documents);`,
-  python: `from mrimpôt import Client
+  python: `from mimpôt import Client
 
 client = Client(api_key='YOUR_API_KEY')
 
@@ -95,7 +95,7 @@ for doc in results:
   php: `<?php
 require_once 'vendor/autoload.php';
 
-use MrImpôt\\Client;
+use MImpôt\\Client;
 
 $client = new Client('YOUR_API_KEY');
 
@@ -134,7 +134,7 @@ export default function APIDocsPage() {
                 Documentation <span className="text-[#3EA7DE]">API</span>
               </h1>
               <p className="mt-4 text-lg text-gray-600">
-                Intégrez facilement les données juridiques de Mr Impôt dans vos applications.
+                Intégrez facilement les données juridiques de M Impôt dans vos applications.
               </p>
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function APIDocsPage() {
                 <code>Authorization: Bearer votre_clé_api</code>
               </pre>
               <p className="text-sm text-gray-500 mt-3">
-                Pour obtenir une clé, contactez-nous à <a href="mailto:api@mrimpôt.com" className="text-[#3EA7DE]">api@mrimpôt.com</a>.
+                Pour obtenir une clé, contactez-nous à <a href="mailto:api@mimpôt.com" className="text-[#3EA7DE]">api@mrimpôt.com</a>.
               </p>
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function APIDocsPage() {
               </ul>
               <div className="mt-4 pt-4 border-t border-gray-100 text-center">
                 <a
-                  href="mailto:api@mrimpôt.com"
+                  href="mailto:api@mimpôt.com"
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#3EA7DE] text-white rounded-xl font-medium hover:bg-[#3EA7DE]/90 transition-colors"
                 >
                   Demander une clé API
