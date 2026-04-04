@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/immutability */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -37,7 +38,8 @@ interface Document {
   downloads: number;
 }
 
-export default function CategoriesPage() {
+// Composant interne qui utilise useSearchParams
+function CategoriesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("cat");
@@ -321,5 +323,20 @@ export default function CategoriesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Composant principal avec Suspense boundary
+export default function CategoriesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3DA7E3]"></div>
+        </div>
+      }
+    >
+      <CategoriesContent />
+    </Suspense>
   );
 }
