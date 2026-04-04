@@ -9,7 +9,7 @@ const testimonialsList = [
     name: "Marie Laurent",
     role: "Expert-comptable",
     content:
-      "Mr Impôt a révolutionné ma façon de travailler. Tous les documents fiscaux sont centralisés et faciles d'accès. Je gagne un temps précieux chaque jour.",
+      "M. Impôt a révolutionné ma façon de travailler. Tous les documents fiscaux sont centralisés et faciles d'accès. Je gagne un temps précieux chaque jour.",
     rating: 5,
     avatar:
       "https://ui-avatars.com/api/?name=Marie+Laurent&background=3EA7DE&color=fff",
