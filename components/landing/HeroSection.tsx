@@ -25,7 +25,7 @@ export default function HeroSection() {
               en un seul endroit
             </h1>
             <p className="mt-6 text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              Mr Impôt vous offre une plateforme complète pour consulter des
+              M Impôt vous offre une plateforme complète pour consulter des
               documents, regarder des vidéos éducatives et rester informé des
               dernières actualités fiscales.
             </p>

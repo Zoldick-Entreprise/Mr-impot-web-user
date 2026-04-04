@@ -144,7 +144,7 @@ export default function FeaturesPage() {
                 <span className="text-[#3EA7DE]"> simplifier votre quotidien</span>
               </h1>
               <p className="mt-4 text-lg text-gray-600">
-                Découvrez l’ensemble des fonctionnalités de Mr Impôt, conçues
+                Découvrez l’ensemble des fonctionnalités de M Impôt, conçues
                 pour les professionnels du droit et de la fiscalité.
               </p>
             </div>

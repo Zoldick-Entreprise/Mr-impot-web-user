@@ -32,7 +32,7 @@ export default function LandingHeader() {
           <Link href="/" className="flex items-center space-x-3 group">
             <img
               src="/logo.png"
-              alt="Mr Impôt"
+              alt="M Impôt"
               className="h-15 w-auto transition-transform duration-200 group-hover:scale-105"
               onError={(e) => {
                 e.currentTarget.src =

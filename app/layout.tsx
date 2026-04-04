@@ -5,13 +5,13 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mr Impôt - Plateforme de ressources juridiques",
+  title: "M Impôt - Plateforme de ressources juridiques",
   description:
     "Accédez à tous vos documents juridiques, vidéos éducatives et ressources fiscales en un seul endroit.",
   keywords: "impôts, fiscalité, droit, jurisprudence, documents juridiques",
-  authors: [{ name: "Mr Impôt" }],
+  authors: [{ name: "M Impôt" }],
   openGraph: {
-    title: "Mr Impôt - Plateforme de ressources juridiques",
+    title: "M Impôt - Plateforme de ressources juridiques",
     description:
       "Accédez à tous vos documents juridiques, vidéos éducatives et ressources fiscales.",
     type: "website",

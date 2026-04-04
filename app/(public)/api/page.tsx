@@ -76,7 +76,7 @@ export default function APIPage() {
                   Accéder à la documentation complète
                 </Link>
                 <p className="mt-3 text-xs text-gray-400">
-                  Besoin d’une clé API ? Contactez-nous à <a href="mailto:api@mrimpôt.com" className="text-[#3EA7DE]">api@mrimpôt.com</a>
+                  Besoin d’une clé API ? Contactez-nous à <a href="mailto:api@mimpôt.com" className="text-[#3EA7DE]">api@mrimpôt.com</a>
                 </p>
               </div>
             </div>

@@ -58,7 +58,7 @@ export default function LandingFooter() {
             <div className="flex items-center space-x-3 mb-4">
               <img
                 src="/logo.png"
-                alt="Mr Impôt"
+                alt="M Impôt"
                 className="h-20 w-auto"
                 onError={(e) => {
                   e.currentTarget.src =
@@ -138,10 +138,10 @@ export default function LandingFooter() {
               <li className="flex items-center gap-3 text-sm text-gray-400 group">
                 <RiMailLine className="w-4 h-4 text-[#3EA7DE] flex-shrink-0" />
                 <a
-                  href="mailto:contact@mrimpôt.com"
+                  href="mailto:contact@mimpôt.com"
                   className="hover:text-white transition-colors"
                 >
-                  contact@mrimpôt.com
+                  contact@mimpôt.com
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm text-gray-400 group">

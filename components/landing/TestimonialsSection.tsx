@@ -7,7 +7,7 @@ const testimonials = [
     name: "Marie Laurent",
     role: "Expert-comptable",
     content:
-      "Mr Impôt a révolutionné ma façon de travailler. Tous les documents fiscaux sont centralisés et faciles d'accès.",
+      "M Impôt a révolutionné ma façon de travailler. Tous les documents fiscaux sont centralisés et faciles d'accès.",
     rating: 5,
     avatar:
       "https://ui-avatars.com/api/?name=Marie+Laurent&background=3EA7DE&color=fff",
@@ -25,7 +25,7 @@ const testimonials = [
     name: "Sophie Martin",
     role: "Chef d'entreprise",
     content:
-      "Grâce à Mr Impôt, je gère mes obligations fiscales en toute sérénité. Un outil complet et intuitif.",
+      "Grâce à M Impôt, je gère mes obligations fiscales en toute sérénité. Un outil complet et intuitif.",
     rating: 4,
     avatar:
       "https://ui-avatars.com/api/?name=Sophie+Martin&background=3EA7DE&color=fff",

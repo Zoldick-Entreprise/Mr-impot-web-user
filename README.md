@@ -1,10 +1,10 @@
-# Mr Impôt
+# M Impôt
 
 Plateforme de ressources juridiques et fiscales.
 
 ## À propos
 
-Mr Impôt est une application web qui centralise l'accès aux documents juridiques, vidéos éducatives et ressources fiscales. Une solution moderne et intuitive pour les professionnels et particuliers.
+M Impôt est une application web qui centralise l'accès aux documents juridiques, vidéos éducatives et ressources fiscales. Une solution moderne et intuitive pour les professionnels et particuliers.
 
 ## Fonctionnalités
 
@@ -47,7 +47,7 @@ webapp/
 
 ## Équipe
 
-Projet développé dans le cadre de Mr Impôt.
+Projet développé dans le cadre de M Impôt.
 
 ## Licence
 

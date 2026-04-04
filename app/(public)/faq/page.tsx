@@ -44,7 +44,7 @@ const faqItems = [
   {
     question: "Que faire en cas de problème technique ou de question ?",
     answer:
-      "Notre support client est joignable 24h/24 et 7j/7 par chat en ligne, email (support@mrimpôt.com) ou téléphone au +33 1 23 45 67 89."
+      "Notre support client est joignable 24h/24 et 7j/7 par chat en ligne, email (support@mimpôt.com) ou téléphone au +33 1 23 45 67 89."
   }
 ];
 
@@ -70,7 +70,7 @@ export default function FAQPage() {
                 Réponses à vos <span className="text-[#3EA7DE]">questions</span>
               </h1>
               <p className="mt-4 text-lg text-gray-600">
-                Tout ce que vous devez savoir sur Mr Impôt
+                Tout ce que vous devez savoir sur  Impôt
               </p>
             </div>
           </div>

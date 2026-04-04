@@ -27,7 +27,7 @@ const testimonialsList = [
     name: "Sophie Martin",
     role: "Chef d'entreprise",
     content:
-      "Grâce à Mr Impôt, je gère mes obligations fiscales en toute sérénité. Un outil complet et intuitif, je le recommande à tous mes confrères.",
+      "Grâce à M Impôt, je gère mes obligations fiscales en toute sérénité. Un outil complet et intuitif, je le recommande à tous mes confrères.",
     rating: 5,
     avatar:
       "https://ui-avatars.com/api/?name=Sophie+Martin&background=3EA7DE&color=fff",
@@ -36,7 +36,7 @@ const testimonialsList = [
     name: "Jean-Paul Lefèvre",
     role: "Directeur juridique",
     content:
-      "Nous utilisons Mr Impôt au sein de notre service juridique. La veille réglementaire et les mises à jour automatiques sont un vrai gain de sécurité.",
+      "Nous utilisons M Impôt au sein de notre service juridique. La veille réglementaire et les mises à jour automatiques sont un vrai gain de sécurité.",
     rating: 5,
     avatar:
       "https://ui-avatars.com/api/?name=Jean-Paul+Lefevre&background=FF7F36&color=fff",
@@ -54,7 +54,7 @@ const testimonialsList = [
     name: "Ahmed Benali",
     role: "Notaire",
     content:
-      "Je recommande vivement Mr Impôt à tous les professionnels du droit. La recherche avancée permet de trouver rapidement la réponse à des questions pointues.",
+      "Je recommande vivement M Impôt à tous les professionnels du droit. La recherche avancée permet de trouver rapidement la réponse à des questions pointues.",
     rating: 5,
     avatar:
       "https://ui-avatars.com/api/?name=Ahmed+Benali&background=FF7F36&color=fff",
@@ -72,7 +72,7 @@ const testimonialsList = [
     name: "Philippe Garnier",
     role: "Expert fiscal",
     content:
-      "Les commentaires d'experts et les analyses de la doctrine fiscale sont d'une grande qualité. Mr Impôt est devenu ma référence.",
+      "Les commentaires d'experts et les analyses de la doctrine fiscale sont d'une grande qualité. M Impôt est devenu ma référence.",
     rating: 5,
     avatar:
       "https://ui-avatars.com/api/?name=Philippe+Garnier&background=FF7F36&color=fff",
@@ -177,7 +177,7 @@ export default function TestimonialsPage() {
               Rejoignez notre communauté
             </h2>
             <p className="text-gray-600 mb-6">
-              Déjà plus de 50 000 professionnels utilisent Mr Impôt.
+              Déjà plus de 50 000 professionnels utilisent M Impôt.
             </p>
             <Link
               href="/register"
