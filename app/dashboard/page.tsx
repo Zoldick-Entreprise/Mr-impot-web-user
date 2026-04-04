@@ -1,146 +1,99 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import {
   FileText,
-  Download,
-  Search,
-  Users,
-  TrendingUp,
+  Video,
+  Heart,
+  ChevronRight,
+  Play,
+  Clock,
   Eye,
+  Download,
 } from "lucide-react";
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
-import { documents, recentActivities } from "@/data/mockData";
-import { formatDateTime } from "@/utils/formatters";
+import { documents, videos, categories } from "@/data/mockData";
 
 export default function DashboardPage() {
-  const stats = [
-    {
-      title: "Documents consultés",
-      value: "245",
-      change: "+12%",
-      icon: Eye,
-      color: "#3DA7E3",
-    },
-    {
-      title: "Téléchargements",
-      value: "89",
-      change: "+8%",
-      icon: Download,
-      color: "#F49600",
-    },
-    {
-      title: "Recherches",
-      value: "156",
-      change: "+23%",
-      icon: Search,
-      color: "#3DA7E3",
-    },
-    {
-      title: "Documents déposés",
-      value: "12",
-      change: "+3",
-      icon: Users,
-      color: "#F49600",
-    },
-  ];
-
-  const getActionIcon = (action: string) => {
-    switch (action) {
-      case "download":
-        return <Download className="w-4 h-4 text-[#F49600]" />;
-      case "search":
-        return <Search className="w-4 h-4 text-[#3DA7E3]" />;
-      case "view":
-        return <Eye className="w-4 h-4 text-[#3DA7E3]" />;
-      default:
-        return <FileText className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  const getActionText = (action: string) => {
-    switch (action) {
-      case "download":
-        return "a téléchargé";
-      case "search":
-        return "a recherché";
-      case "view":
-        return "a consulté";
-      default:
-        return "a interagi avec";
-    }
-  };
+  const [favorites] = useState([documents[0], documents[2], videos[0]]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Bonjour, Pierre</h1>
         <p className="text-gray-500 mt-1">
-          Bienvenue sur votre espace personnel Mr Impôt
+          Découvrez les dernières ressources juridiques
         </p>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <Card
-            key={stat.title}
-            padding="md"
-            className="border border-gray-200"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {stat.value}
-                </p>
-                <div className="mt-2">
-                  <Badge variant="success" size="sm">
-                    <TrendingUp className="w-3 h-3 inline mr-1" />
-                    {stat.change}
-                  </Badge>
+      {/* Catégories principales */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {categories.slice(0, 4).map((category) => (
+            <Link
+              key={category.id}
+              href={`/dashboard/documents?category=${category.slug}`}
+              className="group"
+            >
+              <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all cursor-pointer">
+                <div className="text-center p-4">
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3"
+                    style={{
+                      backgroundColor: `${category.id === "1" ? "#3DA7E3" : "#F49600"}10`,
+                    }}
+                  >
+                    <FileText
+                      className="w-6 h-6"
+                      style={{
+                        color: category.id === "1" ? "#3DA7E3" : "#F49600",
+                      }}
+                    />
+                  </div>
+                  <h3 className="font-medium text-gray-900 group-hover:text-[#3DA7E3] transition-colors">
+                    {category.name}
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {category.subCategories?.length || 0} sous-catégories
+                  </p>
                 </div>
-              </div>
-              <div
-                className="p-3 rounded-lg"
-                style={{ backgroundColor: `${stat.color}10` }}
-              >
-                <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-      {/* Recent Documents & Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Documents */}
-        <div className="lg:col-span-2">
-          <Card className="border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Documents récents
-              </h2>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/dashboard/documents")}
-              >
-                Voir tout
-              </Button>
-            </div>
-            <div className="space-y-3">
-              {documents.slice(0, 3).map((doc) => (
-                <div
-                  key={doc.id}
-                  className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer"
-                  onClick={() =>
-                    (window.location.href = `/dashboard/documents/${doc.id}`)
-                  }
-                >
-                  <div className="flex items-center gap-3">
+      {/* Documents récents */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Documents récents
+          </h2>
+          <Link
+            href="/dashboard/documents"
+            className="text-sm text-[#3DA7E3] hover:underline flex items-center gap-1"
+          >
+            Voir tout
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {documents.slice(0, 3).map((doc) => (
+            <Link
+              key={doc.id}
+              href={`/dashboard/documents/${doc.id}`}
+              className="group"
+            >
+              <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all h-full">
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-3">
                     <div
                       className="p-2 rounded-lg"
                       style={{ backgroundColor: "#3DA7E310" }}
@@ -150,83 +103,159 @@ export default function DashboardPage() {
                         style={{ color: "#3DA7E3" }}
                       />
                     </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{doc.title}</p>
-                      <p className="text-sm text-gray-500">
-                        {doc.category.name} • {doc.views} vues
-                      </p>
-                    </div>
+                    <Badge variant="default" size="sm">
+                      {doc.format}
+                    </Badge>
                   </div>
-                  <Badge variant="default" size="sm">
-                    {doc.format}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Recent Activity */}
-        <div>
-          <Card className="border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Activité récente
-            </h2>
-            <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start gap-3 pb-3 border-b border-gray-100 last:border-0"
-                >
-                  <div className="p-1.5 rounded-lg bg-gray-100">
-                    {getActionIcon(activity.action)}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-900">
-                      <span className="font-medium">{activity.user}</span>{" "}
-                      {getActionText(activity.action)}{" "}
-                      <span className="font-medium text-[#3DA7E3]">
-                        {activity.document}
-                      </span>
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {formatDateTime(activity.time)}
-                    </p>
+                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+                    {doc.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+                    {doc.description}
+                  </p>
+                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {doc.views}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Download className="w-3 h-3" />
+                      {doc.downloads}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Categories Quick Access */}
-      <Card className="border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Accès rapide par catégorie
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { name: "Droit Fiscal", color: "#3DA7E3" },
-            { name: "Droit des Sociétés", color: "#F49600" },
-            { name: "Droit du Travail", color: "#3DA7E3" },
-            { name: "Jurisprudence", color: "#F49600" },
-          ].map((category) => (
-            <button
-              key={category.name}
-              onClick={() =>
-                (window.location.href = `/dashboard/documents?category=${category.name.toLowerCase().replace(/\s/g, "-")}`)
-              }
-              className="p-4 text-center rounded-lg border border-gray-200 hover:border-[#3DA7E3] hover:shadow-sm transition-all group"
-            >
-              <p className="font-medium text-gray-900 group-hover:text-[#3DA7E3] transition-colors">
-                {category.name}
-              </p>
-              <p className="text-sm text-gray-400 mt-1">Accéder</p>
-            </button>
+              </Card>
+            </Link>
           ))}
         </div>
-      </Card>
+      </section>
+
+      {/* Favoris */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Mes favoris</h2>
+          <Link
+            href="/dashboard/favorites"
+            className="text-sm text-[#3DA7E3] hover:underline flex items-center gap-1"
+          >
+            Voir tout
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {favorites.map((item, index) => (
+            <Link
+              key={index}
+              href={
+                "title" in item
+                  ? `/dashboard/documents/${item.id}`
+                  : `/dashboard/videos/${item.id}`
+              }
+              className="group"
+            >
+              <Card className="border border-gray-200 hover:border-[#F49600] hover:shadow-md transition-all h-full">
+                <div className="p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ backgroundColor: "#F4960010" }}
+                    >
+                      {"format" in item ? (
+                        <FileText
+                          className="w-5 h-5"
+                          style={{ color: "#F49600" }}
+                        />
+                      ) : (
+                        <Video
+                          className="w-5 h-5"
+                          style={{ color: "#F49600" }}
+                        />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-gray-400">
+                        {"format" in item ? item.category.name : item.category}
+                      </p>
+                    </div>
+                    <Heart className="w-4 h-4 fill-[#F49600] text-[#F49600]" />
+                  </div>
+                  <p className="text-sm text-gray-500 line-clamp-2">
+                    {item.description}
+                  </p>
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Vidéos récentes */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Vidéos recommandées
+          </h2>
+          <Link
+            href="/dashboard/videos"
+            className="text-sm text-[#3DA7E3] hover:underline flex items-center gap-1"
+          >
+            Voir tout
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {videos.slice(0, 3).map((video) => (
+            <Link
+              key={video.id}
+              href={`/dashboard/videos/${video.id}`}
+              className="group"
+            >
+              <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all overflow-hidden">
+                <div className="relative aspect-video bg-gray-100">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://via.placeholder.com/640x360?text=Mr+Impôt";
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                      <Play className="w-6 h-6 text-[#3DA7E3] ml-0.5" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded">
+                    {Math.floor(video.duration / 60)}:
+                    {(video.duration % 60).toString().padStart(2, "0")}
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+                    {video.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 line-clamp-2">
+                    {video.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-3">
+                    <Badge variant="default" size="sm">
+                      {video.category}
+                    </Badge>
+                    <span className="text-xs text-gray-400 flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {video.views}
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

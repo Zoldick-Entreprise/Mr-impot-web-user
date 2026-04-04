@@ -7,6 +7,7 @@ import Dropdown, { DropdownItem } from "@/components/common/Dropdown";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Settings, LogOut, User } from "lucide-react";
+import Link from "next/link";
 
 export default function Header() {
   const { toggle } = useSidebar();
@@ -65,7 +66,9 @@ export default function Header() {
         <div className="flex items-center gap-3">
           {/* Notifications */}
           <button className="relative p-2 rounded-full hover:bg-gray-200 transition-colors">
-            <Bell className="w-5 h-5 text-gray-500" />
+            <Link href="/dashboard/notifications" className="relative">
+              <Bell className="w-5 h-5 text-gray-500" />
+            </Link>
             <span className="absolute top-1 right-1 w-2 h-2 bg-[#F49600] rounded-full"></span>
           </button>
 
