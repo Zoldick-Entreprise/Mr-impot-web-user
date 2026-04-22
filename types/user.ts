@@ -1,18 +1,22 @@
+/**
+ * Schéma utilisateur aligné sur le backend Laravel M Impôt.
+ * Correspond à la ressource UserResource renvoyée par /api/user et /api/profile.
+ */
 export interface User {
-  id: string;
+  id: string | number;
   name: string;
   email: string;
-  avatar?: string;
-  role: "user" | "admin";
-  createdAt: Date;
-  updatedAt: Date;
+  avatar?: string | null;
+  preferred_language?: "fr" | "en" | string | null;
+  created_at?: string;
 }
 
+/**
+ * Extension locale — les statistiques et activités ne sont pas encore
+ * exposées par le backend. À compléter une fois les endpoints disponibles.
+ */
 export interface UserProfile extends User {
-  phone?: string;
-  address?: string;
-  bio?: string;
-  documentsCount: number;
-  videosWatched: number;
-  lastLogin: Date;
+  documentsCount?: number;
+  videosWatched?: number;
+  lastLogin?: string;
 }

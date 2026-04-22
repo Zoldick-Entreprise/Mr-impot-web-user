@@ -1,140 +1,191 @@
 # AGENTS.md - M Impôt Project
 
-## Dernière mise à jour : 04/04/2026
+## Dernière mise à jour : 22/04/2026
 
 ## État du projet
 
-- **Phase actuelle :** Développement frontend - Dashboard Utilisateur
-- **Statut :** ✅ COMPLÈTÉ (Toutes les pages principales sont terminées)
+- **Phase actuelle :** Intégration backend Laravel — Auth + Profil utilisateur
+- **Statut :** ✅ Auth email/mot de passe branchée · ✅ Profil utilisateur branché · 🟡 Google OAuth en attente de config backend · 🔴 Forgot-password 500 (SMTP backend)
 
 ---
 
-## Travail effectué
+## Architecture Backend-For-Frontend (BFF)
 
-### Phase 1 : Configuration & Setup - ✅ COMPLÈTE
+Le frontend Next.js ne parle **jamais directement** au backend Laravel depuis
+le navigateur. Toutes les requêtes passent par des **route handlers internes**
+`app/api/*` qui :
 
-#### Étape 1.1 : Installation des dépendances
+1. Lisent le token JWT depuis un **cookie HttpOnly** (`auth_token`, 30 jours).
+2. Forwardent la requête vers `BACKEND_API_URL` (env var, fallback sur
+   `https://mr-impots-back.onrender.com/api`).
+3. Re-sérialisent la réponse pour le client.
 
-- ✅ Installation de lucide-react, axios, zustand
+Avantages : URL backend cachée, pas de CORS, token inaccessible au JavaScript
+(anti-XSS), possibilité de normaliser les erreurs côté Next.
 
-#### Étape 1.2 : Configuration Tailwind
+### Fichiers clés
 
-- ✅ Configuration des couleurs personnalisées
-- ✅ primary: #3DA7E3, accent: #F49600
-
-#### Étape 1.3 : Types TypeScript
-
-- ✅ types/user.ts
-- ✅ types/document.ts
-- ✅ types/video.ts
-- ✅ types/index.ts
-
-#### Étape 1.4 : Données mock
-
-- ✅ data/mockData.ts
-  - Catégories (6 principales)
-  - Documents (4 exemples)
-  - Vidéos (2 exemples)
-  - Activités récentes
-
-#### Étape 1.5 : Services API
-
-- ✅ services/api.ts
-  - Configuration Axios
-  - Intercepteurs pour token
-  - Gestion des erreurs 401
-
-#### Étape 1.6 : Composants UI communs (base)
-
-- ✅ Button.tsx (variants, sizes, loading)
-- ✅ Input.tsx (avec label et erreur)
-- ✅ Card.tsx (padding personnalisable)
-- ✅ LoadingSpinner.tsx
-
-#### Étape 1.7 : Composants UI communs (avancés)
-
-- ✅ Modal.tsx (avec overlay et animation)
-- ✅ Avatar.tsx (image, fallback, user icon)
-- ✅ Badge.tsx (variants: default, primary, success, warning, danger)
-- ✅ Dropdown.tsx (avec DropdownItem)
-- ✅ Tabs.tsx (variants: underline, pills)
-
-#### Étape 1.8 : Hooks personnalisés
-
-- ✅ hooks/useDebounce.ts
-- ✅ hooks/useLocalStorage.ts
-- ✅ hooks/useMediaQuery.ts
-- ✅ hooks/useClickOutside.ts
-- ✅ hooks/useSidebar.ts (zustand)
-
-#### Étape 1.9 : Utilitaires
-
-- ✅ utils/constants.ts
-- ✅ utils/formatters.ts (date, file size, text)
-- ✅ utils/validators.ts (email, password, phone)
-- ✅ utils/dateUtils.ts (timeAgo, isToday, isThisWeek)
+| Fichier | Rôle |
+| --- | --- |
+| `lib/backend.ts` | Client HTTP serveur (JSON + FormData multipart) |
+| `lib/auth.ts` | Cookie helpers + `getCurrentUser()` server-side |
+| `contexts/AuthContext.tsx` | Provider client : `useAuth()` expose user, refresh, logout |
+| `app/dashboard/layout.tsx` | Server Component — SSR le user, redirect `/login` sinon |
+| `app/dashboard/DashboardShell.tsx` | Wrapper client — monte `AuthProvider` |
 
 ---
 
-### Phase 2 : Layout & Navigation - ✅ COMPLÈTE
+## Intégrations réalisées
 
-#### Composants créés
+### Phase 5 : Authentification backend — ✅ COMPLÈTE
 
-- ✅ components/layout/Sidebar.tsx
-- ✅ components/layout/Header.tsx
-- ✅ app/(dashboard)/layout.tsx
-- ✅ app/layout.tsx (métadonnées SEO)
-- ✅ app/globals.css (styles globaux)
+#### Endpoints BFF créés
 
-#### Pages Landing
+| Route frontend | Méthode | Cible backend | État |
+| --- | --- | --- | --- |
+| `/api/auth/login` | POST | `/auth/login` | ✅ OK (testé) |
+| `/api/auth/register` | POST | `/auth/register` | ✅ OK (testé) |
+| `/api/auth/logout` | POST | `/auth/logout` | ✅ OK (testé) |
+| `/api/auth/me` | GET | `/user` | ✅ OK |
+| `/api/auth/forgot-password` | POST | `/auth/forgot-password` | 🔴 500 backend (SMTP) |
+| `/api/auth/reset-password` | POST | `/auth/reset-password` | 🟡 Non testé |
+| `/api/auth/google/redirect` | GET | `/auth/google/redirect` | 🟡 Voir ci-dessous |
+| `/api/auth/google/callback` | GET | — (reçoit `?token=xxx`) | 🟡 Voir ci-dessous |
 
-- ✅ components/landing/LandingHeader.tsx
-- ✅ components/landing/HeroSection.tsx
-- ✅ components/landing/FeaturesSection.tsx
-- ✅ components/landing/CategoriesSection.tsx
-- ✅ components/landing/TestimonialsSection.tsx
-- ✅ components/landing/CTASection.tsx
-- ✅ components/landing/LandingFooter.tsx
-- ✅ app/page.tsx (Landing Page)
+#### Pages branchées
 
----
+- `app/(auth)/login/page.tsx` — `fetch('/api/auth/login')` + flux Google
+- `app/(auth)/register/page.tsx` — concat `firstName + lastName → name`, `phone` ignoré (non supporté backend)
+- `app/(auth)/forgot-password/page.tsx` — branchée
+- `app/(auth)/reset-password/page.tsx` — **créée** (lit `token` + `email` depuis l'URL)
+- Déconnexion branchée dans `Sidebar.tsx` ET `Header.tsx` (via `useAuth().logout`)
+- Notifications via `react-hot-toast` (Toaster monté dans `app/layout.tsx`)
 
-### Phase 3 : Authentification - ✅ COMPLÈTE
+#### Inscription — mapping des champs
 
-#### Pages créées
-
-- ✅ app/(auth)/login/page.tsx (Connexion avec Google)
-- ✅ app/(auth)/register/page.tsx (Inscription 3 étapes avec Google)
-- ✅ app/(auth)/forgot-password/page.tsx (Mot de passe oublié)
-- ✅ app/(auth)/reset-password/page.tsx (Réinitialisation)
-
-#### Fonctionnalités
-
-- ✅ Bouton "Continuer avec Google"
-- ✅ Formulaire email/mot de passe
-- ✅ Validation des champs
-- ✅ États de chargement
-- ✅ Redirection vers dashboard
+| Frontend | Backend |
+| --- | --- |
+| `firstName` + `lastName` | `name` (concaténation) |
+| `email` | `email` |
+| `password` | `password` |
+| `confirm` | `password_confirmation` |
+| `phone` | ❌ ignoré (pas de champ backend) |
 
 ---
 
-### Phase 4 : Dashboard Utilisateur - ✅ COMPLÈTE
+### Phase 6 : Profil utilisateur — ✅ COMPLÈTE
 
-#### Pages créées
+#### Endpoints créés
 
-| Page                | Route                       | Statut |
-| ------------------- | --------------------------- | ------ |
-| Dashboard (Accueil) | `/dashboard`                | ✅     |
-| Documents           | `/dashboard/documents`      | ✅     |
-| Vidéos              | `/dashboard/videos`         | ✅     |
-| Recherche           | `/dashboard/search`         | ✅     |
-| Catégories          | `/dashboard/categories`     | ✅     |
-| Favoris             | `/dashboard/favorites`      | ✅     |
-| Profil              | `/dashboard/profile`        | ✅     |
-| Paramètres          | `/dashboard/settings`       | ✅     |
-| Notifications       | `/dashboard/notifications`  | ✅     |
-| Détail document     | `/dashboard/documents/[id]` | ✅     |
-| Détail vidéo        | `/dashboard/videos/[id]`    | ✅     |
+| Route frontend | Méthode | Cible backend | Détails |
+| --- | --- | --- | --- |
+| `/api/profile` | GET | `/user` | Renvoie l'user courant |
+| `/api/profile` | PATCH | `/profile` (POST + `_method=PATCH`) | multipart/form-data |
+
+> Laravel ne supporte pas nativement PATCH en multipart, on utilise donc
+> l'astuce `_method=PATCH` sur un POST (pattern standard Laravel).
+
+#### Schéma UserResource (backend)
+
+```ts
+{
+  id: string | number,
+  name: string,
+  email: string,
+  avatar: string | null,
+  preferred_language: "fr" | "en",
+  created_at: string
+}
+```
+
+#### Pages branchées
+
+- `components/layout/Header.tsx` — affiche `user.name` + avatar réels (plus de "Pierre Akoa" en dur)
+- `app/dashboard/page.tsx` — "Bonjour, {prénom}" avec helper `getFirstName()`
+- `app/dashboard/profile/page.tsx` — **refondue** pour matcher le schéma backend :
+  - Champs éditables : `name`, `preferred_language`, `avatar` (upload)
+  - Email en lecture seule (le backend ne le modifie pas)
+  - Suppression des champs non supportés : `firstName/lastName/phone/location/bio`
+  - Upload avatar avec preview local + validation taille (2 Mo max)
+  - Appel `PATCH /api/profile` en FormData
+  - Après succès : `setUser(data.user)` rafraîchit tout le contexte (sidebar, header, dashboard)
+
+---
+
+## Configuration requise
+
+### Variables d'environnement Vercel
+
+| Variable | Valeur | Requis ? |
+| --- | --- | --- |
+| `BACKEND_API_URL` | `https://mr-impots-back.onrender.com/api` | Optionnel (fallback codé) |
+
+### Cookie d'authentification
+
+- Nom : `auth_token`
+- Scope : `/`
+- Flags : `HttpOnly`, `SameSite=Lax`, `Secure` (prod uniquement)
+- Durée : 30 jours
+
+---
+
+## Google OAuth — ce qu'il reste à faire
+
+### Symptôme actuel
+
+Google retourne `Missing required parameter: redirect_uri`. Cela signifie que
+l'URL de redirection générée par Laravel Socialite ne contient pas le paramètre
+`redirect_uri` — donc la config backend est incomplète.
+
+### À configurer côté backend Laravel (Render)
+
+Dans le `.env` du backend, vérifier la présence de :
+
+```env
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=https://mr-impots-back.onrender.com/api/auth/google/callback
+FRONTEND_URL=https://<ton-domaine-vercel>
+```
+
+À la fin de `GoogleController@handleGoogleCallback`, le backend doit rediriger vers :
+
+```php
+return redirect(env('FRONTEND_URL') . '/api/auth/google/callback?token=' . $token);
+```
+
+### À configurer côté Google Cloud Console
+
+> Tu n'as **pas** besoin de saisir `client_id` / `client_secret` côté frontend :
+> c'est le backend Laravel qui les utilise. Le frontend n'en voit jamais.
+
+- **Origines JavaScript autorisées :**
+  - `http://localhost:3000`
+  - `https://<ton-domaine-vercel>`
+- **URI de redirection autorisé :**
+  - `https://mr-impots-back.onrender.com/api/auth/google/callback`
+
+### URL de preview v0
+
+L'URL `https://vm-74g1a4nxih3ryzikjtsdmir2.vusercontent.net/` est bien la
+preview v0, mais **elle change à chaque session**. Google n'autorisera pas
+de wildcard. Pour tester OAuth ici :
+
+1. Soit ajouter l'URL preview actuelle dans la Google Console (à refaire à chaque nouvelle session v0)
+2. Soit tester OAuth uniquement sur le déploiement Vercel final (domaine stable)
+
+**Recommandé :** tester OAuth après déploiement sur Vercel, pas dans la preview v0.
+
+---
+
+## Problème connu : forgot-password 500
+
+Le backend Laravel renvoie 500 sur `/auth/forgot-password`. Probable :
+- Variables SMTP non configurées sur Render (`MAIL_MAILER`, `MAIL_HOST`, etc.)
+- Ou la route email n'est pas implémentée côté backend
+
+Le frontend est correctement branché ; il affichera l'erreur backend dans un
+toast. Côté backend, vérifier les logs Render.
 
 ---
 
@@ -147,162 +198,34 @@ webapp/
 │   │   ├── forgot-password/
 │   │   ├── login/
 │   │   ├── register/
-│   │   └── reset-password/
+│   │   └── reset-password/      ← créé phase 5
+│   ├── api/                     ← créé phase 5-6
+│   │   ├── auth/
+│   │   │   ├── login/
+│   │   │   ├── register/
+│   │   │   ├── logout/
+│   │   │   ├── forgot-password/
+│   │   │   ├── reset-password/
+│   │   │   ├── me/
+│   │   │   └── google/
+│   │   │       ├── redirect/
+│   │   │       └── callback/
+│   │   └── profile/             ← créé phase 6
 │   ├── dashboard/
-│   │   ├── categories/
-│   │   ├── documents/
-│   │   │   └── [id]/
-│   │   ├── favorites/
-│   │   ├── notifications/
-│   │   ├── profile/
-│   │   ├── search/
-│   │   ├── settings/
-│   │   ├── videos/
-│   │   │   └── [id]/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── layout.tsx
-│   ├── globals.css
-│   └── page.tsx (Landing)
-├── components/
-│   ├── common/ (10 composants)
-│   ├── landing/ (7 composants)
-│   └── layout/ (2 composants)
-├── data/
-│   └── mockData.ts
-├── hooks/ (5 hooks)
+│   │   ├── DashboardShell.tsx   ← créé phase 6 (client shell)
+│   │   ├── layout.tsx           ← Server Component (phase 6)
+│   │   └── ... (pages existantes)
+│   ├── layout.tsx               ← Toaster ajouté phase 5
+│   └── ...
+├── contexts/                    ← créé phase 6
+│   └── AuthContext.tsx
+├── lib/                         ← créé phase 5
+│   ├── auth.ts
+│   └── backend.ts
 ├── services/
-│   └── api.ts
-├── types/ (4 types)
-└── utils/ (4 utils)
+│   └── api.ts                   ← refactoré phase 5 (baseURL /api)
+└── ...
 ```
-
----
-
-## Technologies utilisées
-
-- **Framework :** Next.js (App Router)
-- **Styling :** Tailwind CSS
-- **Langage :** TypeScript
-- **Icônes :** Lucide React
-- **État :** Zustand (sidebar)
-- **HTTP :** Axios
-
----
-
-## Couleurs utilisées
-
-| Usage               | Code                       |
-| ------------------- | -------------------------- |
-| Primaire (bleu)     | `#3DA7E3`                  |
-| Secondaire (orange) | `#F49600`                  |
-| Texte principal     | `#000000`                  |
-| Texte secondaire    | `#000000` (opacité 40-60%) |
-| Bordures            | `#E5E7EB` (gray-200)       |
-| Fond                | `#FFFFFF`                  |
-
----
-
-## Fonctionnalités implémentées
-
-### Authentification
-
-- Connexion email/mot de passe
-- Inscription en 3 étapes
-- Mot de passe oublié
-- Connexion avec Google (UI prête)
-
-### Dashboard
-
-- Page d'accueil avec catégories, documents récents, favoris, vidéos
-- Sidebar responsive avec navigation
-- Header avec recherche et menu utilisateur
-
-### Gestion des documents
-
-- Liste des documents avec filtres (catégorie, format)
-- Recherche par titre/description
-- Téléchargement de documents
-- Visualisation PDF (placeholder)
-- Détail document avec informations et recommandations
-
-### Gestion des vidéos
-
-- Liste des vidéos avec grille
-- Filtres par catégorie
-- Lecteur vidéo personnalisé (play/pause, volume, plein écran)
-- Détail vidéo avec informations et recommandations
-
-### Profil utilisateur
-
-- Informations personnelles
-- Modification des données
-- Activité récente
-
-### Paramètres
-
-- Langue (FR/EN) - prévision backend
-- Notifications (email, push, alertes)
-- Apparence (thème clair/sombre)
-- Sécurité (changement mot de passe)
-- Appareils connectés
-
-### Autres pages
-
-- Catégories avec sous-catégories
-- Favoris avec gestion
-- Centre de notifications (lecture/suppression)
-
----
-
-## Prévisions backend (TODO)
-
-### API endpoints à créer
-
-#### Authentification
-
-- `POST /api/auth/login` - Connexion
-- `POST /api/auth/register` - Inscription
-- `POST /api/auth/forgot-password` - Mot de passe oublié
-- `POST /api/auth/reset-password` - Réinitialisation
-- `POST /api/auth/google` - Connexion Google
-
-#### Documents
-
-- `GET /api/documents` - Liste des documents
-- `GET /api/documents/:id` - Détail d'un document
-- `GET /api/documents/:id/download` - Téléchargement
-
-#### Vidéos
-
-- `GET /api/videos` - Liste des vidéos
-- `GET /api/videos/:id` - Détail d'une vidéo
-
-#### Catégories
-
-- `GET /api/categories` - Liste des catégories
-- `GET /api/categories/:slug/documents` - Documents par catégorie
-
-#### Favoris
-
-- `GET /api/favorites` - Liste des favoris
-- `POST /api/favorites/:id` - Ajouter aux favoris
-- `DELETE /api/favorites/:id` - Retirer des favoris
-
-#### Notifications
-
-- `GET /api/notifications` - Liste des notifications
-- `PUT /api/notifications/:id/read` - Marquer comme lu
-- `PUT /api/notifications/read-all` - Tout marquer comme lu
-- `DELETE /api/notifications/:id` - Supprimer
-- `DELETE /api/notifications` - Tout supprimer
-
-#### Utilisateur
-
-- `GET /api/user/profile` - Profil utilisateur
-- `PUT /api/user/profile` - Mise à jour profil
-- `PUT /api/user/password` - Changement mot de passe
-- `PUT /api/user/settings` - Paramètres utilisateur
 
 ---
 
@@ -312,35 +235,20 @@ webapp/
 # Démarrer le serveur de développement
 npm run dev
 
+# Type-check
+npx tsc --noEmit
+
 # Build de production
 npm run build
-
-# Lancer le linting
-npm run lint
 ```
 
 ---
 
-## Notes importantes
+## Prochaines étapes
 
-- ✅ Toutes les pages utilisent Lucide React pour les icônes (pas d'emojis)
-- ✅ Les couleurs sont appliquées en inline avec Tailwind (`text-[#3DA7E3]`)
-- ✅ Pas de dégradés, design épuré
-- ✅ Responsive sur toutes les pages
-- ✅ États de chargement et erreurs gérés
-- ✅ Code prêt pour intégration API Laravel
-
----
-
-## Prochaines étapes (post-MVP)
-
-1. Intégration API Laravel
-2. Tests utilisateurs
-3. Optimisations SEO
-4. Améliorations performances
-5. Ajout analytics
-
-```
-
-Note a moi meme pour la page document/[id] prevoir comment mettre la barre de recherche pour la recherche dans le document
-```
+1. 🟡 Finaliser Google OAuth (config backend Laravel — voir section ci-dessus)
+2. 🔴 Corriger forgot-password côté backend (SMTP / mail driver)
+3. ⬜ Brancher les endpoints Documents/Videos (actuellement mockés)
+4. ⬜ Brancher Favoris + Notifications
+5. ⬜ Page Settings — changement mot de passe
+6. ⬜ Remplacer les `mockData.ts` par des calls API réels

@@ -8,6 +8,7 @@
 
 import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
+import { backendFetch } from "@/lib/backend";
 
 export const AUTH_COOKIE = "auth_token";
 /** 30 jours */
@@ -26,6 +27,38 @@ export type SessionUser = {
 export async function getAuthToken(): Promise<string | null> {
   const store = await cookies();
   return store.get(AUTH_COOKIE)?.value ?? null;
+}
+
+/**
+ * Récupère l'utilisateur connecté côté serveur.
+ * Utilisé dans les Server Components (ex : dashboard layout).
+ * Retourne null si non authentifié ou si le token est invalide.
+ */
+export async function getCurrentUser(): Promise<SessionUser | null> {
+  const token = await getAuthToken();
+  if (!token) return null;
+
+  type MeResponse =
+    | SessionUser
+    | { data?: SessionUser; user?: SessionUser };
+
+  const result = await backendFetch<MeResponse>("/user", {
+    method: "GET",
+    token,
+  });
+
+  if (!result.ok || !result.data) return null;
+
+  const raw = result.data;
+  const user =
+    (raw && typeof raw === "object" && "email" in raw
+      ? (raw as SessionUser)
+      : null) ||
+    (raw as { data?: SessionUser })?.data ||
+    (raw as { user?: SessionUser })?.user ||
+    null;
+
+  return user;
 }
 
 /**

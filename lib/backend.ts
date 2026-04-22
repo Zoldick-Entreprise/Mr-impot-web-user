@@ -33,6 +33,7 @@ type FetchOptions = {
 /**
  * Appel HTTP authentifié vers le backend.
  * Gère l'ajout du Bearer token et la désérialisation JSON.
+ * Si `body` est un FormData, il est transmis tel quel (multipart/form-data).
  */
 export async function backendFetch<T = unknown>(
   path: string,
@@ -42,12 +43,16 @@ export async function backendFetch<T = unknown>(
 
   const url = path.startsWith("http") ? path : `${BACKEND_URL}${path}`;
 
+  const isFormData =
+    typeof FormData !== "undefined" && body instanceof FormData;
+
   const finalHeaders: Record<string, string> = {
     Accept: "application/json",
     ...headers,
   };
 
-  if (body !== undefined) {
+  // Ne pas forcer Content-Type pour FormData : fetch définit la boundary.
+  if (body !== undefined && !isFormData) {
     finalHeaders["Content-Type"] = "application/json";
   }
 
@@ -55,11 +60,18 @@ export async function backendFetch<T = unknown>(
     finalHeaders["Authorization"] = `Bearer ${token}`;
   }
 
+  const fetchBody: BodyInit | undefined =
+    body === undefined
+      ? undefined
+      : isFormData
+        ? (body as FormData)
+        : JSON.stringify(body);
+
   try {
     const res = await fetch(url, {
       method,
       headers: finalHeaders,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: fetchBody,
       redirect,
       cache: "no-store",
     });

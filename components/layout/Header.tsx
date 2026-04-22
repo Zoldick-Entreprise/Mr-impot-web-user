@@ -8,11 +8,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Settings, LogOut, User } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Header() {
   const { toggle } = useSidebar();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const { user, logout, isLoggingOut } = useAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,11 +23,14 @@ export default function Header() {
     }
   };
 
+  const displayName = user?.name ?? "Utilisateur";
+  const avatarUrl = user?.avatar ?? undefined;
+
   const userMenuTrigger = (
     <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded-lg px-3 py-2 transition-colors">
-      <Avatar fallback="Pierre Akoa" size="sm" />
+      <Avatar fallback={displayName} src={avatarUrl} size="sm" />
       <span className="hidden md:inline text-sm font-medium text-gray-700">
-        Pierre Akoa
+        {displayName}
       </span>
       <ChevronDown className="hidden md:block w-4 h-4 text-gray-400" />
     </div>
@@ -87,10 +92,10 @@ export default function Header() {
               </div>
             </DropdownItem>
             <div className="border-t border-gray-100 my-1"></div>
-            <DropdownItem onClick={() => console.log("ut")}>
+            <DropdownItem onClick={isLoggingOut ? undefined : logout}>
               <div className="flex items-center gap-2 text-red-600">
                 <LogOut className="w-4 h-4" />
-                <span>Déconnexion</span>
+                <span>{isLoggingOut ? "Déconnexion…" : "Déconnexion"}</span>
               </div>
             </DropdownItem>
           </Dropdown>

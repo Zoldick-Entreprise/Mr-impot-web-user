@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Home,
   Search,
@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navigation = [
   { name: "Accueil", href: "/dashboard", icon: Home },
@@ -27,23 +27,12 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { isOpen, close } = useSidebar();
   const isMobile = useMediaQuery("(max-width: 1024px)");
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { logout, isLoggingOut } = useAuth();
 
-  const handleLogout = async () => {
-    if (isLoggingOut) return;
-    setIsLoggingOut(true);
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-    } catch (err) {
-      console.error("[logout] error:", err);
-    } finally {
-      toast.success("Déconnexion réussie.");
-      router.push("/login");
-      router.refresh();
-    }
+  const handleLogout = () => {
+    void logout();
   };
 
   useEffect(() => {

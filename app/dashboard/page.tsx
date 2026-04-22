@@ -16,11 +16,14 @@ import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
 import { documents, videos, categories } from "@/data/mockData";
+import { useAuth, getFirstName } from "@/contexts/AuthContext";
 
 // Type pour les favoris (union de Document et Video)
 type FavoriteItem = (typeof documents)[0] | (typeof videos)[0];
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const firstName = getFirstName(user);
   const [favorites] = useState<FavoriteItem[]>([
     documents[0],
     documents[2],
@@ -36,7 +39,9 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Bonjour, Pierre</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Bonjour, {firstName}
+        </h1>
         <p className="text-gray-500 mt-1">
           Découvrez les dernières ressources juridiques
         </p>
