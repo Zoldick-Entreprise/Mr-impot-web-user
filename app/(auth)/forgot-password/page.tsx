@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Mail, Shield, ArrowLeft, CheckCircle, Send } from "lucide-react";
 import Button from "@/components/common/Button";
+import toast from "react-hot-toast";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -14,12 +15,24 @@ export default function ForgotPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Logique d'envoi email
-    console.log("Reset password for:", email);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.message || "Une erreur est survenue.");
+        return;
+      }
       setIsSent(true);
-    }, 1000);
+    } catch (err) {
+      console.error("[forgot-password] error:", err);
+      toast.error("Erreur réseau. Veuillez réessayer.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

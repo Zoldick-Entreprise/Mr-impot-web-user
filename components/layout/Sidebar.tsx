@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   Search,
@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const navigation = [
   { name: "Accueil", href: "/dashboard", icon: Home },
@@ -26,8 +27,24 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { isOpen, close } = useSidebar();
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (err) {
+      console.error("[logout] error:", err);
+    } finally {
+      toast.success("Déconnexion réussie.");
+      router.push("/login");
+      router.refresh();
+    }
+  };
 
   useEffect(() => {
     if (isMobile && isOpen) {
@@ -111,17 +128,14 @@ export default function Sidebar() {
 
           {/* Footer */}
           <div className="p-4 border-t border-gray-200">
-            <Link href="/">
-              <button
-                onClick={() => {
-                  console.log("Logout");
-                }}
-                className="flex items-center w-full px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-red-600 transition-colors"
-              >
-                <LogOut className="w-4 h-4 mr-3" />
-                Déconnexion
-              </button>
-            </Link>
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <LogOut className="w-4 h-4 mr-3" />
+              {isLoggingOut ? "Déconnexion…" : "Déconnexion"}
+            </button>
             <div className="mt-4 text-xs text-center text-gray-400">
               Version 1.0.0
             </div>

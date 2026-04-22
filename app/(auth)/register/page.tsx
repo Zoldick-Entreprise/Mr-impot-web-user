@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const steps = ["Identité", "Accès", "Confirmation"];
 
@@ -39,21 +40,55 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.acceptTerms) {
+      toast.error("Vous devez accepter les conditions d'utilisation.");
+      return;
+    }
     setIsLoading(true);
-    console.log("Inscription:", form);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const name = `${form.firstName} ${form.lastName}`.trim();
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email: form.email,
+          password: form.password,
+          password_confirmation: form.confirm,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.message || "Impossible de créer le compte.");
+        return;
+      }
+      toast.success("Compte créé avec succès !");
       router.push("/dashboard");
-    }, 1000);
+      router.refresh();
+    } catch (err) {
+      console.error("[register] error:", err);
+      toast.error("Erreur réseau. Veuillez réessayer.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleRegister = () => {
+  const handleGoogleRegister = async () => {
     setIsLoading(true);
-    console.log("Register with Google");
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth/google/redirect");
+      const data = await res.json();
+      if (!res.ok || !data?.url) {
+        toast.error(data?.message || "Impossible de lancer Google Sign-In.");
+        setIsLoading(false);
+        return;
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      console.error("[register] google error:", err);
+      toast.error("Erreur réseau. Veuillez réessayer.");
       setIsLoading(false);
-      router.push("/dashboard");
-    }, 1000);
+    }
   };
 
   const isStepValid = () => {

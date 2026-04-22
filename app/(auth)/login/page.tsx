@@ -2,10 +2,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, Lock, Mail, Shield, CheckCircle } from "lucide-react";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,26 +15,61 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Affiche les erreurs remontées par le callback Google (?error=...)
+  useEffect(() => {
+    const err = searchParams.get("error");
+    if (!err) return;
+    const messages: Record<string, string> = {
+      missing_token: "Authentification Google échouée : token manquant.",
+      access_denied: "Connexion Google annulée.",
+    };
+    toast.error(messages[err] || `Erreur Google : ${err}`);
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // logique de connexion
-    console.log({ email, password, rememberMe });
-    setTimeout(() => {
-      setIsLoading(false);
-      // Redirection vers dashboard après connexion
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.message || "Identifiants invalides.");
+        return;
+      }
+      toast.success(`Bienvenue${data?.user?.name ? " " + data.user.name : ""} !`);
       router.push("/dashboard");
-    }, 1000);
+      router.refresh();
+    } catch (err) {
+      console.error("[login] error:", err);
+      toast.error("Erreur réseau. Veuillez réessayer.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setIsLoading(true);
-    console.log("Login with Google");
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth/google/redirect");
+      const data = await res.json();
+      if (!res.ok || !data?.url) {
+        toast.error(data?.message || "Impossible de lancer Google Sign-In.");
+        setIsLoading(false);
+        return;
+      }
+      // Redirection plein écran vers Google.
+      window.location.href = data.url;
+    } catch (err) {
+      console.error("[login] google error:", err);
+      toast.error("Erreur réseau. Veuillez réessayer.");
       setIsLoading(false);
-      router.push("/dashboard");
-    }, 1000);
+    }
   };
 
   return (
