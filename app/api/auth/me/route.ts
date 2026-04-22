@@ -6,10 +6,6 @@ import {
   type SessionUser,
 } from "@/lib/auth";
 
-type MeResponse =
-  | SessionUser
-  | { data?: SessionUser; user?: SessionUser };
-
 export async function GET() {
   const token = await getAuthToken();
 
@@ -17,27 +13,21 @@ export async function GET() {
     return NextResponse.json({ user: null }, { status: 401 });
   }
 
-  // Le backend Laravel expose généralement /user ou /auth/me.
-  // On tente /user d'abord (Laravel Sanctum/Breeze standard).
-  const result = await backendFetch<MeResponse>("/user", {
+  // Le backend expose GET /profile pour l'utilisateur courant.
+  // Réponse : { data: UserResource }
+  const result = await backendFetch<{ data?: SessionUser }>("/profile", {
     method: "GET",
     token,
   });
 
   if (!result.ok) {
-    // Token invalide ou expiré côté backend : on purge le cookie.
+    // Token invalide/expiré : on purge le cookie.
     const res = NextResponse.json({ user: null }, { status: 401 });
     clearAuthCookieOnResponse(res);
     return res;
   }
 
-  const raw = result.data as MeResponse | null;
-  const user =
-    (raw && "email" in (raw as SessionUser) ? (raw as SessionUser) : null) ||
-    (raw as { data?: SessionUser })?.data ||
-    (raw as { user?: SessionUser })?.user ||
-    null;
-
+  const user = result.data?.data ?? null;
   if (!user) {
     return NextResponse.json({ user: null }, { status: 401 });
   }

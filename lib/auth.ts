@@ -38,27 +38,15 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   const token = await getAuthToken();
   if (!token) return null;
 
-  type MeResponse =
-    | SessionUser
-    | { data?: SessionUser; user?: SessionUser };
-
-  const result = await backendFetch<MeResponse>("/user", {
+  // Le backend expose GET /profile pour récupérer l'utilisateur courant.
+  // Réponse : { data: UserResource }
+  const result = await backendFetch<{ data?: SessionUser }>("/profile", {
     method: "GET",
     token,
   });
 
-  if (!result.ok || !result.data) return null;
-
-  const raw = result.data;
-  const user =
-    (raw && typeof raw === "object" && "email" in raw
-      ? (raw as SessionUser)
-      : null) ||
-    (raw as { data?: SessionUser })?.data ||
-    (raw as { user?: SessionUser })?.user ||
-    null;
-
-  return user;
+  if (!result.ok || !result.data?.data) return null;
+  return result.data.data;
 }
 
 /**

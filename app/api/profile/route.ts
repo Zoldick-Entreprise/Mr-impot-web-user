@@ -13,27 +13,18 @@ export async function GET() {
     return NextResponse.json({ message: "Non authentifié." }, { status: 401 });
   }
 
-  const result = await backendFetch<{ data?: SessionUser } | SessionUser>(
-    "/user",
-    { token },
-  );
+  const result = await backendFetch<{ data?: SessionUser }>("/profile", {
+    token,
+  });
 
-  if (!result.ok || !result.data) {
+  if (!result.ok || !result.data?.data) {
     return NextResponse.json(
       { message: result.error ?? "Impossible de charger le profil." },
       { status: result.status || 500 },
     );
   }
 
-  const raw = result.data;
-  const user =
-    (raw && typeof raw === "object" && "email" in raw
-      ? (raw as SessionUser)
-      : null) ||
-    (raw as { data?: SessionUser })?.data ||
-    null;
-
-  return NextResponse.json({ user });
+  return NextResponse.json({ user: result.data.data });
 }
 
 /**

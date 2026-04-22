@@ -2,6 +2,13 @@
 
 ## Dernière mise à jour : 22/04/2026
 
+### Fix (22/04) — boucle de redirection login → dashboard → login
+Le dashboard layout appelait `GET /user` (endpoint Sanctum standard absent
+de ce backend, 404). Passage sur `GET /profile` qui retourne
+`{ data: UserResource }`. 3 fichiers corrigés : `lib/auth.ts`,
+`app/api/auth/me/route.ts`, `app/api/profile/route.ts`.
+
+
 ## État du projet
 
 - **Phase actuelle :** Intégration backend Laravel — Auth + Profil utilisateur
@@ -46,7 +53,7 @@ Avantages : URL backend cachée, pas de CORS, token inaccessible au JavaScript
 | `/api/auth/login` | POST | `/auth/login` | ✅ OK (testé) |
 | `/api/auth/register` | POST | `/auth/register` | ✅ OK (testé) |
 | `/api/auth/logout` | POST | `/auth/logout` | ✅ OK (testé) |
-| `/api/auth/me` | GET | `/user` | ✅ OK |
+| `/api/auth/me` | GET | `/profile` | ✅ OK |
 | `/api/auth/forgot-password` | POST | `/auth/forgot-password` | 🔴 500 backend (SMTP) |
 | `/api/auth/reset-password` | POST | `/auth/reset-password` | 🟡 Non testé |
 | `/api/auth/google/redirect` | GET | `/auth/google/redirect` | 🟡 Voir ci-dessous |
@@ -79,7 +86,7 @@ Avantages : URL backend cachée, pas de CORS, token inaccessible au JavaScript
 
 | Route frontend | Méthode | Cible backend | Détails |
 | --- | --- | --- | --- |
-| `/api/profile` | GET | `/user` | Renvoie l'user courant |
+| `/api/profile` | GET | `/profile` | Renvoie l'user courant (`{ data: UserResource }`) |
 | `/api/profile` | PATCH | `/profile` (POST + `_method=PATCH`) | multipart/form-data |
 
 > Laravel ne supporte pas nativement PATCH en multipart, on utilise donc
