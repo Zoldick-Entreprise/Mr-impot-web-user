@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
+import api from "@/services/api";
 
 const steps = ["Identité", "Accès", "Confirmation"];
 
@@ -26,13 +27,13 @@ export default function Register() {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
     email: "",
     password: "",
     confirm: "",
     acceptTerms: false,
   });
   const router = useRouter();
+  const name : string = form.firstName + " " + form.lastName;
 
   const set = (key: string, val: string | boolean) =>
     setForm((prev) => ({ ...prev, [key]: val }));
@@ -40,11 +41,31 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log("Inscription:", form);
-    setTimeout(() => {
-      setIsLoading(false);
+
+    try {
+
+      const response = await api.post("/auth/register", {
+        name,
+        email: form.email,
+        password: form.password,
+        password_confirmation: form.confirm,
+      });
+
+      if (response.data?.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+
+      console.log("Response data:", response.data.token);
+      const userName = response.data?.user?.name || response.data?.name || name;
+      localStorage.setItem("userName", userName);
+
+      console.log("Inscription réussie:", response.data);
       router.push("/dashboard");
-    }, 1000);
+
+    } catch (error) {
+      console.error("Erreur d'inscription:", error);
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleRegister = () => {
@@ -292,7 +313,7 @@ export default function Register() {
                       </div>
                     </div>
                   </div>
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Téléphone (optionnel)
                     </label>
@@ -306,7 +327,7 @@ export default function Register() {
                         className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#3DA7E3] focus:ring-1 focus:ring-[#3DA7E3] transition-all"
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </>
               )}
 
@@ -416,12 +437,12 @@ export default function Register() {
                           {form.lastName}
                         </span>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      {/* <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Téléphone</span>
                         <span className="text-gray-900 font-medium">
                           {form.phone || "—"}
                         </span>
-                      </div>
+                      </div> */}
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">E-mail</span>
                         <span className="text-gray-900 font-medium">

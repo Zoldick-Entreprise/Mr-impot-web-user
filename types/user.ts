@@ -6,6 +6,7 @@ export interface User {
   role: "user" | "admin";
   createdAt: Date;
   updatedAt: Date;
+  token?: string; // Token d'authentification pour les requêtes API
 }
 
 export interface UserProfile extends User {
