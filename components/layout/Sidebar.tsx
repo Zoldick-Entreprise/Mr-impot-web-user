@@ -14,6 +14,9 @@ import {
 import { useSidebar } from "@/hooks/useSidebar";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import api from "@/services/api";
 
 const navigation = [
   { name: "Accueil", href: "/dashboard", icon: Home },
@@ -28,6 +31,18 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { isOpen, close } = useSidebar();
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const router = useRouter();
+
+    const handleLogout = async () => {
+    try {
+      const response = await api.post("/auth/logout");
+      if (response.status === 200) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }
 
   useEffect(() => {
     if (isMobile && isOpen) {
@@ -62,9 +77,11 @@ export default function Sidebar() {
           {/* Logo */}
       
            <Link href="/" className="flex items-center justify-center h-16 border-b border-gray-200 space-x-3">
-            <img
+            <Image
               src="/logo.png"
               alt="M Impôt"
+              width={40}
+              height={40}
               className="h-10 w-auto "
               onError={(e) => {
                 e.currentTarget.src =
@@ -113,9 +130,7 @@ export default function Sidebar() {
           <div className="p-4 border-t border-gray-200">
             <Link href="/">
               <button
-                onClick={() => {
-                  console.log("Logout");
-                }}
+                onClick={() => handleLogout()}
                 className="flex items-center w-full px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-red-600 transition-colors"
               >
                 <LogOut className="w-4 h-4 mr-3" />

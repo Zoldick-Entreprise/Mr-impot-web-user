@@ -4,28 +4,69 @@ import { Menu, Bell, Search, ChevronDown } from "lucide-react";
 import { useSidebar } from "@/hooks/useSidebar";
 import Avatar from "@/components/common/Avatar";
 import Dropdown, { DropdownItem } from "@/components/common/Dropdown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Settings, LogOut, User } from "lucide-react";
 import Link from "next/link";
+import api from "@/services/api";
 
 export default function Header() {
   const { toggle } = useSidebar();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [userName, setUserName] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
+    if (searchQuery.trim()) {  
       router.push(`/dashboard/search?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
+    useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      const storedName = localStorage.getItem("userName");
+
+      if (storedName) {
+        setUserName(storedName);
+      }
+
+      if (!token) {
+        return;
+      }
+
+      try {
+        const response = await api.get("/profile");
+        if (response.data.data?.name) {
+          setUserName(response.data.data.name);
+          localStorage.setItem("userName", response.data.data.name);
+          console.log("Profile data:", response.data.data.name);
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await api.post("/auth/logout");
+      if (response.status === 200) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }
+
   const userMenuTrigger = (
     <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded-lg px-3 py-2 transition-colors">
-      <Avatar fallback="Pierre Akoa" size="sm" />
+      <Avatar fallback={userName} size="sm" />
       <span className="hidden md:inline text-sm font-medium text-gray-700">
-        Pierre Akoa
+        {userName}
       </span>
       <ChevronDown className="hidden md:block w-4 h-4 text-gray-400" />
     </div>
@@ -87,7 +128,7 @@ export default function Header() {
               </div>
             </DropdownItem>
             <div className="border-t border-gray-100 my-1"></div>
-            <DropdownItem onClick={() => console.log("ut")}>
+            <DropdownItem onClick={handleLogout}>
               <div className="flex items-center gap-2 text-red-600">
                 <LogOut className="w-4 h-4" />
                 <span>Déconnexion</span>

@@ -108,7 +108,7 @@ export const documents: Document[] = [
 
 export const videos: Video[] = [
   {
-    id: "1",
+    id: "v1",
     title: "Comprendre sa déclaration d'impôts",
     description:
       "Tutoriel complet pour remplir sa déclaration d'impôts en ligne",
@@ -120,7 +120,7 @@ export const videos: Video[] = [
     uploadedAt: new Date("2025-01-05"),
   },
   {
-    id: "2",
+    id: "v2",
     title: "Les avantages fiscaux pour les entreprises",
     description:
       "Découvrez les dispositifs de défiscalisation pour les entreprises",

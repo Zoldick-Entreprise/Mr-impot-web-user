@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   FileText,
@@ -8,14 +8,15 @@ import {
   Heart,
   ChevronRight,
   Play,
-  Clock,
   Eye,
   Download,
 } from "lucide-react";
 import Card from "@/components/common/Card";
-import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
 import { documents, videos, categories } from "@/data/mockData";
+import api from "@/services/api";
+import Image from "next/image";
+import CardCategories from "@/components/dashboard/CardCategories";
 
 // Type pour les favoris (union de Document et Video)
 type FavoriteItem = (typeof documents)[0] | (typeof videos)[0];
@@ -27,6 +28,28 @@ export default function DashboardPage() {
     videos[0],
   ]);
 
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+
+      try {
+        const response = await api.get("/profile");
+        if (response.data.data?.name) {
+          setUserName(response.data.data.name);
+          localStorage.setItem("userName", response.data.data.name);
+          console.log("Profile data:", response.data.data.name);
+        }
+
+        console.log("Profile data:", response.data);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   // Fonction pour vérifier si un item est un document
   const isDocument = (item: FavoriteItem): item is (typeof documents)[0] => {
     return "format" in item;
@@ -36,51 +59,14 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Bonjour, Pierre</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Bonjour, {userName}</h1>
         <p className="text-gray-500 mt-1">
           Découvrez les dernières ressources juridiques
         </p>
       </div>
 
       {/* Catégories principales */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {categories.slice(0, 4).map((category) => (
-            <Link
-              key={category.id}
-              href={`/dashboard/documents?category=${category.slug}`}
-              className="group"
-            >
-              <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all cursor-pointer">
-                <div className="text-center p-4">
-                  <div
-                    className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3"
-                    style={{
-                      backgroundColor: `${category.id === "1" ? "#3DA7E3" : "#F49600"}10`,
-                    }}
-                  >
-                    <FileText
-                      className="w-6 h-6"
-                      style={{
-                        color: category.id === "1" ? "#3DA7E3" : "#F49600",
-                      }}
-                    />
-                  </div>
-                  <h3 className="font-medium text-gray-900 group-hover:text-[#3DA7E3] transition-colors">
-                    {category.name}
-                  </h3>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {category.subCategories?.length || 0} sous-catégories
-                  </p>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
+     <CardCategories />
 
       {/* Documents récents */}
       <section>
@@ -230,9 +216,12 @@ export default function DashboardPage() {
             >
               <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all overflow-hidden">
                 <div className="relative aspect-video bg-gray-100">
-                  <img
-                    src={video.thumbnail}
+                  <Image
+                    src={""}
                     alt={video.title}
+                    width={300}
+                    height={169}
+
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.src =

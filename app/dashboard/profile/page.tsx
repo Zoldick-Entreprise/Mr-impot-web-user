@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import {
-  User,
   Mail,
-  Phone,
-  MapPin,
   Calendar,
   Edit2,
   Save,
@@ -17,18 +14,18 @@ import {
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
+import { useEffect } from "react";
+import api from "@/services/api";
+import { formatDate } from "@/utils/formatters";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [profile, setProfile] = useState({
-    firstName: "Pierre",
-    lastName: "Akoa",
-    email: "pierre.akoa@example.com",
+    name: "",
+    email: "",
     phone: "+237 6 99 99 99 99",
-    location: "Douala, Cameroun",
-    joinDate: "Janvier 2025",
-    bio: "Expert-comptable passionné par le droit fiscal.",
+    created_at: "",
   });
 
   const recentActivities = [
@@ -52,9 +49,54 @@ export default function ProfilePage() {
     },
   ];
 
-  const handleSave = () => {
+  const fetchProfile = async () => {
+    const token = localStorage.getItem("token");
+    console.log("Fetching profile with token:", token);
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await api.get("/profile");
+      if (response.data) {
+        setProfile({
+          name: response.data.data.name || profile.name,
+          email: response.data.data.email || profile.email,
+          phone: response.data.data.phone || profile.phone,
+          created_at: response.data.data.created_at || profile.created_at,
+        });
+
+        console.log("Profile data:", response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      fetchProfile();
+    };
+
+    loadProfile();
+
+  }, []);
+
+  const handleSave = async () => {
     setIsEditing(false);
-    console.log("Profil sauvegardé:", profile);
+    try {
+      const response = await api.patch('/profile', {
+        name: profile.name,
+      });
+      if (response.status == 200) {
+        console.log("Profile updated:", response.data);
+      }
+
+      fetchProfile();
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+    }
   };
 
   return (
@@ -74,7 +116,7 @@ export default function ProfilePage() {
             <div className="text-center">
               <div className="relative inline-block">
                 <Avatar
-                  fallback={`${profile.firstName} ${profile.lastName}`}
+                  fallback={`${profile.name}`}
                   size="xl"
                 />
                 <button className="absolute bottom-0 right-0 p-1.5 bg-[#F49600] rounded-full text-white hover:bg-[#F49600]/90 transition-colors">
@@ -82,10 +124,10 @@ export default function ProfilePage() {
                 </button>
               </div>
               <h2 className="mt-4 text-xl font-semibold text-black">
-                {profile.firstName} {profile.lastName}
+                {profile.name}
               </h2>
               <p className="text-sm text-black/60 mt-1">
-                Membre depuis {profile.joinDate}
+                Membre depuis {formatDate(profile.created_at)}
               </p>
             </div>
 
@@ -95,21 +137,9 @@ export default function ProfilePage() {
                 <span className="text-black/70">{profile.email}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
-                <Phone className="w-4 h-4 text-black/40" />
-                <span className="text-black/70">
-                  {profile.phone || "Non renseigné"}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <MapPin className="w-4 h-4 text-black/40" />
-                <span className="text-black/70">
-                  {profile.location || "Non renseigné"}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
                 <Calendar className="w-4 h-4 text-black/40" />
                 <span className="text-black/70">
-                  Inscrit le {profile.joinDate}
+                  Inscrit le {formatDate(profile.created_at)}
                 </span>
               </div>
             </div>
@@ -160,15 +190,9 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-black/50">Prénom</label>
-                    <p className="text-base font-medium text-black mt-0.5">
-                      {profile.firstName}
-                    </p>
-                  </div>
-                  <div>
                     <label className="text-xs text-black/50">Nom</label>
                     <p className="text-base font-medium text-black mt-0.5">
-                      {profile.lastName}
+                      {profile.name}
                     </p>
                   </div>
                 </div>
@@ -182,74 +206,35 @@ export default function ProfilePage() {
                     {profile.phone || "Non renseigné"}
                   </p>
                 </div>
-                <div>
-                  <label className="text-xs text-black/50">Localisation</label>
-                  <p className="text-base text-black mt-0.5">
-                    {profile.location || "Non renseigné"}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-xs text-black/50">Bio</label>
-                  <p className="text-base text-black mt-0.5">{profile.bio}</p>
-                </div>
               </div>
             ) : (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-black mb-1">
-                      Prénom
-                    </label>
-                    <input
-                      type="text"
-                      value={profile.firstName}
-                      onChange={(e) =>
-                        setProfile({ ...profile, firstName: e.target.value })
-                      }
-                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-base text-black focus:outline-none focus:border-[#3DA7E3]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-black mb-1">
                       Nom
                     </label>
                     <input
                       type="text"
-                      value={profile.lastName}
+                      value={profile.name}
                       onChange={(e) =>
-                        setProfile({ ...profile, lastName: e.target.value })
+                        setProfile({ ...profile, name: e.target.value })
                       }
                       className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-base text-black focus:outline-none focus:border-[#3DA7E3]"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-black mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) =>
-                      setProfile({ ...profile, email: e.target.value })
-                    }
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-base text-black focus:outline-none focus:border-[#3DA7E3]"
-                  />
+                  <label className="text-xs text-black/50">Email</label>
+                  <p className="text-base text-black mt-0.5">{profile.email}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-black mb-1">
-                    Téléphone
-                  </label>
-                  <input
-                    type="tel"
-                    value={profile.phone}
-                    onChange={(e) =>
-                      setProfile({ ...profile, phone: e.target.value })
-                    }
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-base text-black focus:outline-none focus:border-[#3DA7E3]"
-                  />
+                  <label className="text-xs text-black/50">Téléphone</label>
+                  <p className="text-base text-black mt-0.5">
+                    {profile.phone || "Non renseigné"}
+                  </p>
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-black mb-1">
                     Localisation
                   </label>
@@ -261,20 +246,7 @@ export default function ProfilePage() {
                     }
                     className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-base text-black focus:outline-none focus:border-[#3DA7E3]"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-black mb-1">
-                    Bio
-                  </label>
-                  <textarea
-                    value={profile.bio}
-                    onChange={(e) =>
-                      setProfile({ ...profile, bio: e.target.value })
-                    }
-                    rows={3}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-base text-black focus:outline-none focus:border-[#3DA7E3]"
-                  />
-                </div>
+                </div> */}
               </div>
             )}
           </Card>
