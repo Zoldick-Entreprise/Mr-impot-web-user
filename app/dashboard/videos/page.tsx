@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import {
-  Video,
+  Video as VideoIcon,
   Search,
   Filter,
   X,
@@ -15,20 +15,17 @@ import {
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
-import { videos } from "@/data/mockData";
+import { Video } from "@/types/video";
+import Categories from "@/components/categories";
 
-const videoCategories = [
-  { id: "all", name: "Toutes", color: "#3DA7E3" },
-  { id: "Droit Fiscal", name: "Droit Fiscal", color: "#F49600" },
-  { id: "Droit des Sociétés", name: "Droit des Sociétés", color: "#3DA7E3" },
-  { id: "Droit du Travail", name: "Droit du Travail", color: "#F49600" },
-  { id: "Jurisprudence", name: "Jurisprudence", color: "#3DA7E3" },
-];
+
 
 function VideosContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+
+  const [videos, setVideos] = useState<Video[]>([]);
 
   const filteredVideos = videos.filter((video) => {
     const matchesSearch =
@@ -37,7 +34,7 @@ function VideosContent() {
       video.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesCategory =
-      selectedCategory === "all" || video.category === selectedCategory;
+      selectedCategory === "all" || video.category.name === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -47,8 +44,27 @@ function VideosContent() {
     setSearchQuery("");
   };
 
+  
+
   const hasActiveFilters = selectedCategory !== "all" || searchQuery !== "";
 
+  //fonction pour récupérer les vidéos depuis l'API
+  
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch("/api/videos");
+        const data = await response.json();
+        console.log("Vidéos récupérées :", data);
+        setVideos(data.data);
+
+      } catch (error) {
+        console.error("Erreur lors de la récupération des vidéos :", error);
+      }
+    };
+
+    fetchVideos();
+  }, []);
   return (
     <div className="space-y-6">
       <div>
@@ -87,21 +103,10 @@ function VideosContent() {
               <Filter className="w-4 h-4" />
               Catégories :
             </span>
-            {videoCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all
-                  ${
-                    selectedCategory === cat.id
-                      ? "bg-[#3DA7E3] text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }
-                `}
-              >
-                {cat.name}
-              </button>
-            ))}
+            <Categories
+  selectedCategory={selectedCategory}
+  onSelect={(cat) => setSelectedCategory(cat)}
+/>
           </div>
           {hasActiveFilters && (
             <button
@@ -121,10 +126,10 @@ function VideosContent() {
                 Catégorie
               </label>
               <div className="flex flex-wrap gap-2">
-                {videoCategories.map((cat) => (
+                {videos.map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => setSelectedCategory(cat.category.id)}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all
                       ${
                         selectedCategory === cat.id
@@ -133,7 +138,7 @@ function VideosContent() {
                       }
                     `}
                   >
-                    {cat.name}
+                    {cat.category.name}
                   </button>
                 ))}
               </div>
@@ -161,7 +166,7 @@ function VideosContent() {
 
         {filteredVideos.length === 0 ? (
           <Card className="border border-gray-200 text-center py-12">
-            <Video className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <VideoIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <h3 className="text-lg font-medium text-gray-900 mb-1">
               Aucune vidéo trouvée
             </h3>
@@ -189,7 +194,7 @@ function VideosContent() {
                   <div className="relative bg-gray-900 aspect-video">
                     <img
                       src={
-                        video.thumbnail ||
+                        video.thumbnail_url ||
                         "https://via.placeholder.com/640x360?text=M+Impôt"
                       }
                       alt={video.title}
@@ -231,11 +236,11 @@ function VideosContent() {
                     </p>
                     <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                       <Badge variant="default" size="sm">
-                        {video.category}
+                        {video.category.name}
                       </Badge>
                       <span className="text-xs text-gray-400 flex items-center gap-1">
                         <Eye className="w-3 h-3" />
-                        {video.views.toLocaleString()} vues
+                        {video.views_count.toLocaleString()} vues
                       </span>
                     </div>
                   </div>

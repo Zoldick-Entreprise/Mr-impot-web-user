@@ -3,20 +3,18 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import useSWR from "swr";
 import {
-  FileText,
-  Search,
-  Filter,
-  X,
-  Download,
-  Eye,
-  Heart,
-  ChevronDown,
+  FileText, Search, Filter, X,
+  Download, Eye, Heart, ChevronDown,
 } from "lucide-react";
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
-import { documents, categories } from "@/data/mockData";
+import { Category } from "@/types/category";
+import { Document } from "@/types/document";
+
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 function DocumentsContent() {
   const searchParams = useSearchParams();
@@ -24,35 +22,39 @@ function DocumentsContent() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || "");
-  const [selectedFormat, setSelectedFormat] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
-  const filteredDocuments = documents.filter((doc) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description.toLowerCase().includes(searchQuery.toLowerCase());
+  // ✅ Fetch catégories avec SWR (mis en cache, pas de useEffect)
+  const { data: categoriesData } = useSWR<{ data: Category[] }>(
+    "/api/categories",
+    fetcher
+  );
+  const categories = categoriesData?.data ?? [];
 
-    const matchesCategory =
-      selectedCategory === "" ||
-      doc.category.name.toLowerCase().replace(/\s/g, "-") === selectedCategory;
+  // ✅ URL dynamique selon les filtres
+  const documentsUrl = selectedCategory
+    ? `/api/categories/${selectedCategory}/documents`
+    : `/api/documents?per_page=10&page=1`;
 
-    const matchesFormat =
-      selectedFormat === "" || doc.format === selectedFormat;
+  const documentsUrlWithParams = searchQuery
+    ? `${documentsUrl}?q=${encodeURIComponent(searchQuery)}`
+    : documentsUrl;
 
-    return matchesSearch && matchesCategory && matchesFormat;
-  });
+  // ✅ Fetch documents avec SWR (se relance automatiquement si l'URL change)
+  const { data: documentsData, isLoading } = useSWR<Document[]>(
+    documentsUrlWithParams,
+    fetcher
+  );
 
-  const formats = ["PDF", "DOC", "DOCX", "TXT"];
+  const documents = documentsData ?? [];
+
 
   const clearFilters = () => {
     setSelectedCategory("");
-    setSelectedFormat("");
     setSearchQuery("");
   };
 
-  const hasActiveFilters =
-    selectedCategory !== "" || selectedFormat !== "" || searchQuery !== "";
+  const hasActiveFilters = selectedCategory !== "" || searchQuery !== "";
 
   return (
     <div className="space-y-6">
@@ -106,21 +108,6 @@ function DocumentsContent() {
             </select>
             <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
-          <div className="relative">
-            <select
-              value={selectedFormat}
-              onChange={(e) => setSelectedFormat(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-[#3DA7E3] cursor-pointer"
-            >
-              <option value="">Tous les formats</option>
-              {formats.map((format) => (
-                <option key={format} value={format}>
-                  {format}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-          </div>
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
@@ -152,30 +139,8 @@ function DocumentsContent() {
                   ))}
                 </select>
               </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Format
-                </label>
-                <select
-                  value={selectedFormat}
-                  onChange={(e) => setSelectedFormat(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black"
-                >
-                  <option value="">Tous les formats</option>
-                  {formats.map((format) => (
-                    <option key={format} value={format}>
-                      {format}
-                    </option>
-                  ))}
-                </select>
-              </div>
               {hasActiveFilters && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="w-full"
-                >
+                <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
                   Effacer les filtres
                 </Button>
               )}
@@ -187,11 +152,16 @@ function DocumentsContent() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            {filteredDocuments.length} document(s) trouvé(s)
+            {isLoading ? "Chargement..." : `${documents.length} document(s) trouvé(s)`}
           </p>
         </div>
 
-        {filteredDocuments.length === 0 ? (
+        {/* ✅ État de chargement */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3DA7E3]" />
+          </div>
+        ) : documents.length === 0 ? (
           <Card className="border border-gray-200 text-center py-12">
             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <h3 className="text-lg font-medium text-gray-900 mb-1">
@@ -200,34 +170,19 @@ function DocumentsContent() {
             <p className="text-gray-500 text-sm">
               Essayez de modifier vos filtres ou votre recherche
             </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clearFilters}
-              className="mt-4"
-            >
+            <Button variant="outline" size="sm" onClick={clearFilters} className="mt-4">
               Voir tous les documents
             </Button>
           </Card>
         ) : (
           <div className="space-y-3">
-            {filteredDocuments.map((doc) => (
-              <Link
-                key={doc.id}
-                href={`/dashboard/documents/${doc.id}`}
-                className="block"
-              >
+            {documents.map((doc) => (
+              <Link key={doc.id} href={`/dashboard/documents/${doc.id}`} className="block">
                 <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
-                      <div
-                        className="p-2 rounded-lg flex-shrink-0"
-                        style={{ backgroundColor: "#3DA7E310" }}
-                      >
-                        <FileText
-                          className="w-5 h-5"
-                          style={{ color: "#3DA7E3" }}
-                        />
+                      <div className="p-2 rounded-lg flex-shrink-0" style={{ backgroundColor: "#3DA7E310" }}>
+                        <FileText className="w-5 h-5" style={{ color: "#3DA7E3" }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-gray-900 group-hover:text-[#3DA7E3] transition-colors">
@@ -237,15 +192,11 @@ function DocumentsContent() {
                           {doc.description}
                         </p>
                         <div className="flex flex-wrap items-center gap-3 mt-2">
-                          <Badge variant="default" size="sm">
-                            {doc.category.name}
-                          </Badge>
-                          <Badge variant="default" size="sm">
-                            {doc.format}
-                          </Badge>
+                          <Badge variant="default" size="sm">{doc.category.name}</Badge>
+                          <Badge variant="default" size="sm">{doc.format}</Badge>
                           <span className="text-xs text-gray-400 flex items-center gap-1">
                             <Eye className="w-3 h-3" />
-                            {doc.views} vues
+                            {doc.document_views} vues
                           </span>
                           <span className="text-xs text-gray-400 flex items-center gap-1">
                             <Download className="w-3 h-3" />
@@ -285,7 +236,7 @@ export default function DocumentsPage() {
     <Suspense
       fallback={
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3DA7E3]"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3DA7E3]" />
         </div>
       }
     >

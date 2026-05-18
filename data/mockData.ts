@@ -1,4 +1,6 @@
-import { Document, Category, Video } from "@/types";
+import { Document} from "@/utils/definition";
+import { Category } from "@/types/category";
+import { Video } from "@/utils/definition";
 
 export const categories: Category[] = [
   {
@@ -7,16 +9,6 @@ export const categories: Category[] = [
     slug: "droit-fiscal",
     icon: "Landmark",
     description: "Documents et ressources sur le droit fiscal",
-    subCategories: [
-      {
-        id: "1-1",
-        name: "Impôt sur le revenu",
-        slug: "impot-revenu",
-        categoryId: "1",
-      },
-      { id: "1-2", name: "TVA", slug: "tva", categoryId: "1" },
-      { id: "1-3", name: "IS", slug: "is", categoryId: "1" },
-    ],
   },
   {
     id: "2",
@@ -24,11 +16,6 @@ export const categories: Category[] = [
     slug: "droit-societes",
     icon: "Building2",
     description: "Droit des sociétés commerciales",
-    subCategories: [
-      { id: "2-1", name: "SARL", slug: "sarl", categoryId: "2" },
-      { id: "2-2", name: "SA", slug: "sa", categoryId: "2" },
-      { id: "2-3", name: "SAS", slug: "sas", categoryId: "2" },
-    ],
   },
   {
     id: "3",
@@ -52,12 +39,12 @@ export const documents: Document[] = [
     title: "Loi de Finances 2025",
     description:
       "Loi de finances pour l'année 2025, incluant les nouvelles dispositions fiscales",
-    category: categories[0],
+    category: categories[0].id,
     subCategory: "Impôt sur le revenu",
     format: "PDF",
     url: "/documents/loi-finances-2025.pdf",
     thumbnail: "/thumbnails/loi-finances.jpg",
-    uploadedBy: "Ministère des Finances",
+    uploaded_by: "Ministère des Finances",
     uploadedAt: new Date("2025-01-15"),
     downloads: 1250,
     views: 3450,
@@ -67,12 +54,12 @@ export const documents: Document[] = [
     title: "Guide pratique TVA 2025",
     description:
       "Guide complet sur la TVA, taux applicables et obligations déclaratives",
-    category: categories[0],
+    category: categories[0].id,
     subCategory: "TVA",
     format: "PDF",
     url: "/documents/guide-tva-2025.pdf",
     thumbnail: "/thumbnails/guide-tva.jpg",
-    uploadedBy: "Direction Générale des Impôts",
+    uploaded_by: "Direction Générale des Impôts",
     uploadedAt: new Date("2025-02-01"),
     downloads: 890,
     views: 2100,
@@ -81,11 +68,11 @@ export const documents: Document[] = [
     id: "3",
     title: "Code Général des Impôts",
     description: "Version consolidée du Code Général des Impôts",
-    category: categories[0],
+    category: categories[0].id,
     format: "PDF",
     url: "/documents/cgi-2025.pdf",
     thumbnail: "/thumbnails/cgi.jpg",
-    uploadedBy: "Ministère des Finances",
+    uploaded_by: "Ministère des Finances",
     uploadedAt: new Date("2025-01-10"),
     downloads: 2340,
     views: 5670,
@@ -95,11 +82,11 @@ export const documents: Document[] = [
     title: "Arrêté sur les obligations comptables",
     description:
       "Arrêté ministériel relatif aux obligations comptables des entreprises",
-    category: categories[1],
+    category: categories[1].id,
     format: "PDF",
     url: "/documents/arrete-comptable.pdf",
     thumbnail: "/thumbnails/arrete.jpg",
-    uploadedBy: "Ministère de l'Économie",
+    uploaded_by: "Ministère de l'Économie",
     uploadedAt: new Date("2025-01-20"),
     downloads: 567,
     views: 1230,

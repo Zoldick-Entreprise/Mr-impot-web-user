@@ -50,24 +50,32 @@ export default function ProfilePage() {
   ];
 
   const fetchProfile = async () => {
-    const token = localStorage.getItem("token");
-    console.log("Fetching profile with token:", token);
+    // const token = localStorage.getItem("token");
+    // console.log("Fetching profile with token:", token);
 
-    if (!token) {
-      return;
-    }
+    // if (!token) {
+    //   return;
+    // }
 
     try {
-      const response = await api.get("/profile");
-      if (response.data) {
+      const response = await fetch("/api/profile",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+        
+      );
+      const data = await response.json();
+      if (data.data) {
         setProfile({
-          name: response.data.data.name || profile.name,
-          email: response.data.data.email || profile.email,
-          phone: response.data.data.phone || profile.phone,
-          created_at: response.data.data.created_at || profile.created_at,
+          name: data.data.name || profile.name,
+          email: data.data.email || profile.email,
+          phone: data.data.phone || profile.phone,
+          created_at: data.data.created_at || profile.created_at,
         });
 
-        console.log("Profile data:", response.data);
+        console.log("Profile data:", data.data);
       }
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -86,11 +94,19 @@ export default function ProfilePage() {
   const handleSave = async () => {
     setIsEditing(false);
     try {
-      const response = await api.patch('/profile', {
-        name: profile.name,
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          name: profile.name,
+        }),
       });
+      const data = await response;
       if (response.status == 200) {
-        console.log("Profile updated:", response.data);
+        console.log("Profile updated:", data);
       }
 
       fetchProfile();

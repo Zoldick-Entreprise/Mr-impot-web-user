@@ -10,8 +10,8 @@ import {
   Eye,
   Calendar,
   User,
-  Video,
   BookOpen,
+  Video,
   Clock,
   Play,
   Pause,
@@ -23,6 +23,7 @@ import {
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
+import { Category } from "@/types/category";
 import { videos } from "@/data/mockData";
 
 interface VideoDetail {
@@ -30,10 +31,10 @@ interface VideoDetail {
   title: string;
   description: string;
   url: string;
-  thumbnail: string;
+  thumbnail_url: string;
   duration: number;
-  category: string;
-  views: number;
+  category: Category;
+  views_count: number;
   uploadedBy?: string;
   uploadedAt?: Date;
   isFavorite?: boolean;
@@ -60,31 +61,33 @@ export default function VideoDetailPage() {
     const loadVideo = async () => {
       setIsLoading(true);
 
-      // TODO: Remplacer par appel API Laravel
-      // const response = await fetch(`/api/videos/${videoId}`);
-      // const data = await response.json();
+      const response = await fetch(`/api/videos/${videoId}`);
+      const data = await response.json();
+      console.log("Détails de la vidéo :", data.data);
+      setVideo(data.data);
 
-      setTimeout(() => {
-        const found = videos.find((vid) => vid.id === videoId);
-        if (found) {
-          setVideo({
-            id: found.id,
-            title: found.title,
-            description: found.description,
-            url: found.url,
-            thumbnail: found.thumbnail,
-            duration: found.duration,
-            category: found.category,
-            views: found.views + 1,
-            uploadedBy: "Expert M Impôt",
-            uploadedAt: found.uploadedAt,
-            isFavorite: false,
-          });
-          setDuration(found.duration);
-          setIsFavorite(false);
-        }
-        setIsLoading(false);
-      }, 500);
+
+      // setTimeout(() => {
+      //   // const found = videos.find((vid) => vid.id === videoId);
+      //   if (found) {
+      //     setVideo({
+      //       id: found.id,
+      //       title: found.title,
+      //       description: found.description,
+      //       url: found.url,
+      //       thumbnail: found.thumbnail_url,
+      //       duration: found.duration,
+      //       category: found.category.name,
+      //       views: found.views_count + 1,
+      //       uploadedBy: "Expert M Impôt",
+      //       uploadedAt: found.uploadedAt,
+      //       isFavorite: false,
+      //     });
+      //     setDuration(found.duration);
+      //     setIsFavorite(false);
+      //   }
+      //   setIsLoading(false);
+      // }, 500);
     };
 
     loadVideo();
@@ -197,7 +200,7 @@ export default function VideoDetailPage() {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-black">{video.title}</h1>
-            <p className="text-sm text-black/60 mt-1">{video.category}</p>
+            <p className="text-sm text-black/60 mt-1">{video.category.name}</p>
           </div>
         </div>
 
@@ -231,7 +234,7 @@ export default function VideoDetailPage() {
               <video
                 ref={videoRef}
                 src={video.url}
-                poster={video.thumbnail}
+                poster={video.thumbnail_url}
                 className="w-full aspect-video"
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
@@ -302,7 +305,7 @@ export default function VideoDetailPage() {
                 <div>
                   <p className="text-sm text-black/60">Vues</p>
                   <p className="font-medium text-black">
-                    {video.views.toLocaleString()}
+                    {video.views_count.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -371,7 +374,7 @@ export default function VideoDetailPage() {
               {videos
                 .filter(
                   (vid) =>
-                    vid.id !== video.id && vid.category === video.category,
+                    vid.id !== video.id && vid.category === video.category?.id,
                 )
                 .slice(0, 3)
                 .map((relatedVideo) => (

@@ -3,10 +3,10 @@ export interface Video {
   title: string;
   description: string;
   url: string;
-  thumbnail: string;
+  thumbnail_url: string;
   duration: number;
-  category: string;
-  views: number;
+  category: Category;
+  views_count: number;
   uploadedAt: Date;
   isFavorite?: boolean;
 }
@@ -17,3 +17,21 @@ export interface VideoCategory {
   slug: string;
   icon: string;
 }
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string;
+  description?: string;
+  childrens?: SubCategory[];
+}
+
+export interface SubCategory {
+  id: string;
+  name: string;
+  slug: string;
+  categoryId: string;
+}
+
+

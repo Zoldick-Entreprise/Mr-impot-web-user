@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/immutability */
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -17,16 +17,19 @@ import {
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Badge from "@/components/common/Badge";
-import { categories, documents } from "@/data/mockData";
+// import { categories, documents } from "@/data/mockData";
+import Categories from "@/components/categories";
+import { Video as VideoType } from "@/types";
+import { Category } from "@/types/category";
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  icon: string;
-  description?: string;
-  subCategories?: { id: string; name: string; slug: string }[];
-}
+// interface Category {
+//   id: string;
+//   name: string;
+//   slug: string;
+//   icon: string;
+//   description?: string;
+//   childrens?: { id: string; name: string; slug: string }[];
+// }
 
 interface Document {
   id: string;
@@ -42,49 +45,105 @@ interface Document {
 function CategoriesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const categorySlug = searchParams.get("cat");
+  const categoryId = searchParams.get("cat");
+  console.log("Slug actuel:", categoryId);
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
-  const [categoryDocs, setCategoryDocs] = useState<Document[]>([]);
+  // const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+  //   null,
+  // );
+  // const [categoryDocs, setCategoryDocs] = useState<Document[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [allDocuments, setAllDocuments] = useState<Document[]>([]);
+  const [allVideos, setAllVideos] = useState<VideoType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Simuler chargement des documents par catégorie
-  useEffect(() => {
-    if (categorySlug) {
-      const category = categories.find((cat) => cat.slug === categorySlug);
-      if (category) {
-        setSelectedCategory(category);
-        loadCategoryDocuments(category);
-      } else {
-        setSelectedCategory(null);
-        setCategoryDocs([]);
+
+ useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        const [catRes, docRes, vidRes] = await Promise.all([
+          fetch("/api/categories"),
+          fetch("/api/documents"),
+          fetch("/api/videos"),
+        ]);
+
+        const cats = await catRes.json();
+        const docs = await docRes.json();
+        const vids = await vidRes.json();
+
+        setCategories(cats.data);
+        setAllDocuments(docs.data);
+        setAllVideos(vids.data);
+
+      } catch (error) {
+        console.error("Erreur fetch:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } else {
-      setSelectedCategory(null);
-      setCategoryDocs([]);
-    }
-  }, [categorySlug]);
+    };
 
-  const loadCategoryDocuments = async (category: Category) => {
-    setIsLoading(true);
+    fetchData();
+  }, []);
 
-    // TODO: Remplacer par appel API Laravel
-    // const response = await fetch(`/api/documents?category=${category.slug}`);
-    // const data = await response.json();
 
-    setTimeout(() => {
-      const filteredDocs = documents.filter(
-        (doc) => doc.category.name === category.name,
-      );
-      setCategoryDocs(filteredDocs);
-      setIsLoading(false);
-    }, 300);
-  };
+  const selectedCategory = useMemo(() => {
+    return categories.find((c) => c.childrens?.some(sub => sub.id === categoryId));
+  }, [categories, categoryId]);
+
+  const categoryDocs = useMemo(() => {
+    if (!categoryId) return [];
+
+    return allDocuments.filter(
+      (doc) => String(doc.category.id) === String(categoryId)
+    );
+  }, [allDocuments, categoryId]);
+  console.log(categoryDocs)
+
+  const videos = useMemo(() => {
+    if (!categoryId) return [];
+    return allVideos.filter(
+      (video) => video.category?.id === categoryId
+    );
+  }, [allVideos, categoryId]);
+
+
+  // Simuler chargement des documents par catégorie
+  // useEffect(() => {
+  //   if (categorySlug) {
+  //     const category = categories.find((cat) => cat.slug === categorySlug);
+  //     if (category) {
+  //       setSelectedCategory(category);
+  //       loadCategoryDocuments(category);
+  //     } else {
+  //       setSelectedCategory(null);
+  //       setCategoryDocs([]);
+  //     }
+  //   } else {
+  //     setSelectedCategory(null);
+  //     setCategoryDocs([]);
+  //   }
+  // }, [categorySlug]);
+
+  // const loadCategoryDocuments = async (category: Category) => {
+  //   setIsLoading(true);
+
+  //   TODO: Remplacer par appel API Laravel
+  //   const response = await fetch(`/api/documents?category=${category.slug}`);
+  //   const data = await response.json();
+
+  //   setTimeout(() => {
+  //     const filteredDocs = documents.filter(
+  //       (doc) => doc.category.name === category.name,
+  //     );
+  //     setCategoryDocs(filteredDocs);
+  //     setIsLoading(false);
+  //   }, 300);
+  // };
 
   const handleCategoryClick = (category: Category) => {
-    router.push(`/dashboard/categories?cat=${category.slug}`);
+    router.push(`/dashboard/categories?cat=${category.id}`);
   };
 
   const handleBackToCategories = () => {
@@ -115,14 +174,14 @@ function CategoriesContent() {
         </div>
 
         {/* Sous-catégories si disponibles */}
-        {selectedCategory.subCategories &&
-          selectedCategory.subCategories.length > 0 && (
+        {selectedCategory.childrens &&
+          selectedCategory.childrens.length > 0 && (
             <div>
               <h2 className="text-lg font-semibold text-black mb-3">
                 Sous-catégories
               </h2>
               <div className="flex flex-wrap gap-2">
-                {selectedCategory.subCategories.map((sub) => (
+                {selectedCategory.childrens.map((sub) => (
                   <button
                     key={sub.id}
                     className="px-3 py-1.5 bg-gray-100 hover:bg-[#3DA7E3]/10 rounded-full text-sm text-black/70 hover:text-[#3DA7E3] transition-colors"
@@ -267,16 +326,16 @@ function CategoriesContent() {
                   <div className="flex items-center gap-3 mt-3">
                     <span className="text-xs text-black/40">
                       {
-                        documents.filter(
-                          (d) => d.category.name === category.name,
+                        allDocuments.filter(
+                          (d) => category.childrens?.some(sub => d.category.name === sub.name)
                         ).length
                       }{" "}
                       documents
                     </span>
-                    {category.subCategories &&
-                      category.subCategories.length > 0 && (
+                    {category.childrens &&
+                      category.childrens.length > 0 && (
                         <span className="text-xs text-black/40">
-                          {category.subCategories.length} sous-catégories
+                          {category.childrens.length} sous-catégories
                         </span>
                       )}
                   </div>

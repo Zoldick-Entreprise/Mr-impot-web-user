@@ -17,6 +17,8 @@ import { documents, videos, categories } from "@/data/mockData";
 import api from "@/services/api";
 import Image from "next/image";
 import CardCategories from "@/components/dashboard/CardCategories";
+import GetDocument from "@/components/dashboard/Document";
+
 
 // Type pour les favoris (union de Document et Video)
 type FavoriteItem = (typeof documents)[0] | (typeof videos)[0];
@@ -34,14 +36,13 @@ export default function DashboardPage() {
     const fetchProfile = async () => {
 
       try {
-        const response = await api.get("/profile");
-        if (response.data.data?.name) {
-          setUserName(response.data.data.name);
-          localStorage.setItem("userName", response.data.data.name);
-          console.log("Profile data:", response.data.data.name);
+        const response = await fetch("api/profile");
+        const data = await response.json();
+        if (data.data?.name) {
+          setUserName(data.data.name);
         }
 
-        console.log("Profile data:", response.data);
+        console.log("Profile data:", data.data);
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
@@ -69,64 +70,7 @@ export default function DashboardPage() {
      <CardCategories />
 
       {/* Documents récents */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Documents récents
-          </h2>
-          <Link
-            href="/dashboard/documents"
-            className="text-sm text-[#3DA7E3] hover:underline flex items-center gap-1"
-          >
-            Voir tout
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {documents.slice(0, 3).map((doc) => (
-            <Link
-              key={doc.id}
-              href={`/dashboard/documents/${doc.id}`}
-              className="group"
-            >
-              <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all h-full">
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div
-                      className="p-2 rounded-lg"
-                      style={{ backgroundColor: "#3DA7E310" }}
-                    >
-                      <FileText
-                        className="w-5 h-5"
-                        style={{ color: "#3DA7E3" }}
-                      />
-                    </div>
-                    <Badge variant="default" size="sm">
-                      {doc.format}
-                    </Badge>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
-                    {doc.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3 line-clamp-2">
-                    {doc.description}
-                  </p>
-                  <div className="flex items-center gap-3 text-xs text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {doc.views}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Download className="w-3 h-3" />
-                      {doc.downloads}
-                    </span>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <GetDocument/>
 
       {/* Favoris */}
       <section>
@@ -177,7 +121,7 @@ export default function DashboardPage() {
                           {item.title}
                         </h3>
                         <p className="text-xs text-gray-400">
-                          {isDoc ? item.category.name : item.category}
+                          {isDoc ? item.category : item.category}
                         </p>
                       </div>
                       <Heart className="w-4 h-4 fill-[#F49600] text-[#F49600]" />
@@ -217,7 +161,7 @@ export default function DashboardPage() {
               <Card className="border border-gray-200 hover:border-[#3DA7E3] hover:shadow-md transition-all overflow-hidden">
                 <div className="relative aspect-video bg-gray-100">
                   <Image
-                    src={""}
+                    src="/file.svg"
                     alt={video.title}
                     width={300}
                     height={169}
