@@ -52,32 +52,15 @@ export default function DocumentDetailPage() {
     const loadDocument = async () => {
       setIsLoading(true);
 
-      // TODO: Remplacer par appel API Laravel
-      // const response = await fetch(`/api/documents/${documentId}`);
-      // const data = await response.json();
-
-      setTimeout(() => {
-        const found = documents.find((doc) => doc.id === documentId);
-        if (found) {
-          setDocument({
-            id: found.id,
-            title: found.title,
-            description: found.description,
-            category: found.category,
-            subCategory: found.subCategory,
-            format: found.format,
-            url: found.url,
-            thumbnail: found.thumbnail,
-            uploadedBy: found.uploadedBy,
-            uploadedAt: found.uploadedAt,
-            downloads: found.downloads,
-            views: found.views + 1, // Incrémenter les vues
-            isFavorite: false,
-          });
-          setIsFavorite(false);
-        }
+      try {
+        const response = await fetch(`/api/documents/${documentId}`);
+        const data = await response.json();
+        setDocument(data.data);
+      } catch (error) {
+        setDocument(null);
+      } finally {
         setIsLoading(false);
-      }, 500);
+      }
     };
 
     loadDocument();
@@ -332,7 +315,7 @@ export default function DocumentDetailPage() {
                 .filter(
                   (doc) =>
                     doc.id !== document.id &&
-                    doc.category.name === document.category.name,
+                    doc.category === document.category.name,
                 )
                 .slice(0, 2)
                 .map((relatedDoc) => (
@@ -348,7 +331,7 @@ export default function DocumentDetailPage() {
                           {relatedDoc.title}
                         </p>
                         <p className="text-xs text-black/40">
-                          {relatedDoc.views} vues
+                          {relatedDoc.views} vues • {relatedDoc.downloads} téléchargements
                         </p>
                       </div>
                     </div>

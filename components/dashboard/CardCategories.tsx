@@ -6,7 +6,7 @@ import Card from "../common/Card";
 import { categories } from "@/data/mockData";
 import { useState, useEffect } from "react";
 import api from "@/services/api";
-import { Category } from "@/types";
+import { Category } from "@/types/category";
 
 export default function CardCategories() {
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
@@ -15,16 +15,17 @@ export default function CardCategories() {
     useEffect(() => {
         const fetchCategories = async () => {
           try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-              console.warn("No auth token found, skipping categories fetch.");
-              return;
-            }
+            // const token = localStorage.getItem("token");
+            // if (!token) {
+            //   console.warn("No auth token found, skipping categories fetch.");
+            //   return;
+            // }
 
-            const response = await api.get("/categories");
+            const res = await fetch("/api/categories");
+            const response = await res.json();
 
-            setCategoriesData(response.data.data);
-            console.log("Categories data:", response.data.data);
+            setCategoriesData(response.data);
+            console.log("Categories data:", response.data);
           } catch (error) {
             console.error("Failed to fetch categories:", error);
           }
@@ -40,7 +41,7 @@ export default function CardCategories() {
           <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {categoriesData.slice(0, 4).map((category) => (
+          {categoriesData.map((category) => (
             <Link
               key={category.id}
               href={`/dashboard/documents?category=${category.slug}`}
@@ -65,7 +66,7 @@ export default function CardCategories() {
                     {category.name}
                   </h3>
                   <p className="text-xs text-gray-400 mt-1">
-                    {category.subCategories?.length || 0} sous-catégories
+                    {category.childrens?.length || 0} sous-catégories
                   </p>
                 </div>
               </Card>

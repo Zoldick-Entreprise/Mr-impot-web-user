@@ -21,28 +21,32 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const response = await api.post("/auth/login", {
-        email,
-        password,
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        // credentials: "include",
       });
-
-      if(response.status == 200){
-        console.log("Login response:", response.data);
-        localStorage.setItem("token", response.data.data.token);
-        console.log("le token est :" + response.data.data.token);
-
-        const userName = response.data?.user?.name || response.data?.name || email;
-        localStorage.setItem("userName", userName);
+      const data = await response.json();
+      console.log(data);
+      localStorage.setItem("token", data.data.token);
+      if (response.ok) {
         router.push("/dashboard");
       }
 
     } catch (error) {
-
       console.error("Login error:", error);
       setIsLoading(false);
       return;
-
     }
+    setIsLoading(false);
+
   };
 
   const handleGoogleLogin = () => {

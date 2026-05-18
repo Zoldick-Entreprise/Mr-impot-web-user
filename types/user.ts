@@ -3,7 +3,6 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  role: "user" | "admin";
   createdAt: Date;
   updatedAt: Date;
   token?: string; // Token d'authentification pour les requêtes API

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Settings, LogOut, User } from "lucide-react";
 import Link from "next/link";
 import api from "@/services/api";
+import { toast } from "react-hot-toast";
 
 export default function Header() {
   const { toggle } = useSidebar();
@@ -25,24 +26,13 @@ export default function Header() {
 
     useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
-      const storedName = localStorage.getItem("userName");
-
-      if (storedName) {
-        setUserName(storedName);
-      }
-
-      if (!token) {
-        return;
-      }
-
       try {
-        const response = await api.get("/profile");
-        if (response.data.data?.name) {
-          setUserName(response.data.data.name);
-          localStorage.setItem("userName", response.data.data.name);
-          console.log("Profile data:", response.data.data.name);
-        }
+        const res = await fetch("/api/profile");
+        const data = await res.json();
+
+        if (data.data?.name) {
+          setUserName(data.data.name);
+        } 
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
@@ -53,10 +43,17 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      const response = await api.post("/auth/logout");
-      if (response.status === 200) {
-        router.push("/");
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      });
+      if (response.ok) {
+        toast.success("Déconnexion réussie");
       }
+      router.push("/login");
     } catch (error) {
       console.error("Logout failed:", error);
     }

@@ -65,7 +65,7 @@ function SearchContent() {
             type: "document" as const,
             title: doc.title,
             description: doc.description,
-            category: doc.category.name,
+            category: doc.category,
             format: doc.format,
             views: doc.views,
             downloads: doc.downloads,
