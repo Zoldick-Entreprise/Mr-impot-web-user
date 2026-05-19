@@ -20,8 +20,7 @@ export async function POST(req: Request) {
     httpOnly: true,   
     path: "/",
     sameSite: "lax",
-    secure: true,
-    maxAge: 60 * 3, // 3 minutes (ajustez selon besoin)
+    secure: false, // 🔥 en prod, mettre à true
   });
 
   return response;

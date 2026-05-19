@@ -20,7 +20,7 @@ export async function GET(
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/documents/${id}`,
+      `https://mr-impots-back.onrender.com/api/documents/${id}`,
       {
         method: "GET",
         headers: {
