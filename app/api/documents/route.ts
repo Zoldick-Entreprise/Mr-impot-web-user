@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
     const queryString = request.nextUrl.searchParams.toString();
 
     const url = queryString
-      ? `${process.env.NEXT_PUBLIC_API_URL}/api/documents?${queryString}`
-      : `${process.env.NEXT_PUBLIC_API_URL}/api/documents`;
+      ? `https://mr-impots-back.onrender.com/api/documents?${queryString}`
+      : `https://mr-impots-back.onrender.com/api/documents`;
 
     // 📡 3. Appel backend Laravel
     const response = await fetch(url, {
