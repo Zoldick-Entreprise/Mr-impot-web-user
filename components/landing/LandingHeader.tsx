@@ -67,6 +67,13 @@ export default function LandingHeader() {
               Témoignages
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#3EA7DE] transition-all duration-300 group-hover:w-full" />
             </Link>
+            <Link
+              href="/contact"
+              className="relative text-gray-600 hover:text-[#3EA7DE] transition-colors group py-2"
+            >
+              Contact
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#3EA7DE] transition-all duration-300 group-hover:w-full" />
+            </Link>
             <Link href="/login">
               <Button
                 variant="outline"
